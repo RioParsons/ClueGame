@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ClueGUI extends JFrame {
     private JPanel window;
     public static final Image HOME_SCREEN = loadImage("Clue-home-page.png");
+    public static final Image LOGO = loadImage("CLUE_logo.png");
     private static final String IMAGE_PATH = "resources/";
 
     public ClueGUI() {
@@ -23,11 +24,10 @@ public class ClueGUI extends JFrame {
 
         this.setTitle("Clue Game");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // ============ then the welcome screen =====================
         window = new JPanel() {
             protected void paintComponent(Graphics g) {
                 g.drawImage(HOME_SCREEN, 0, 0, this);
+                g.drawImage(LOGO,0,0,this);
             }
         };
         window.setPreferredSize(new Dimension(965, 800) );
@@ -71,10 +71,10 @@ public class ClueGUI extends JFrame {
     }
 
     private void showSetupDialog() {
-        // Display a dialog box to get the number of players
+        // Dialog box to get the number of players
         int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter the number of players (3-6):"));
 
-        // Display a dialog box to select a character for each player
+        // Dialog box to select a character for each player
         String[] characters = {"Miss Scarlet", "Professor Plum", "Mr. Green", "Colonel Mustard", "Mrs. Peacock", "Mrs. Orchid" };
         String[] options = {"OK", "Cancel"};
         ImageIcon[] icons = {
