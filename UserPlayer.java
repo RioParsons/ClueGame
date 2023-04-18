@@ -1,21 +1,14 @@
 import java.util.ArrayList;
 
-public abstract class Player {
+public class UserPlayer extends Player {
     String type;
     String name;
     ArrayList<String> cards;
 
-    public Player(String Name){
-        this.name = Name;
+    public UserPlayer(String Name){
+        super(Name);
+        type = "User";
         cards = new ArrayList<String>();
-    }
-
-    public void giveCard(String card){
-        cards.add(card);
-    }
-
-    public ArrayList<String> getCards(){
-        return this.cards;
     }
 
     public void setType(String type){
@@ -30,8 +23,17 @@ public abstract class Player {
         return this.name;
     }
 
-    public abstract int rollDice();
-    public abstract void move();
-    public abstract void makeGuess();
+
+    public int rollDice(){
+        int roll = 0;
+        //TODO
+        return roll;
+    }
+    public void move(){
+        //TODO
+    }
+    public void makeGuess(){
+        //TODO
+    }
     
 }

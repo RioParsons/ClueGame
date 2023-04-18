@@ -1,6 +1,7 @@
 public class Main {
-    //Start Game
-
-    
+    public static void main(String args[]){
+        ClueGame game = new ClueGame();
+        game.playGame();
+    }
     
 }

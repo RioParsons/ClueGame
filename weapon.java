@@ -1,7 +1,7 @@
-public class weapon {
+public class Weapon {
     String name;
 
-    public weapon(String name){
+    public Weapon(String name){
         this.name=name;
     }
 

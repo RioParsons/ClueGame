@@ -1,3 +1,3 @@
-public class guessSheet {
+public class GuessSheet {
     
 }

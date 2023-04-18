@@ -1,30 +1,36 @@
 import java.util.ArrayList;
 
-public class room {
+public class Room {
     String name;
-    weapon weapon;
-    room connectedRoom;
+    Weapon weapon;
+    Room connectedRoom;
 
-    public room(String name){
+    public Room(String name){
         this.name = name;
     }
 
-    public void findConnectedRoom( ArrayList<room> rooms){
+    public void setConnectedRoom( ArrayList<Room> rooms){
         switch (this.name){
             case "Kitchen":
                 this.connectedRoom = findRoom("Study", rooms);
+                break;
             case "Study":
                 this.connectedRoom = findRoom("Kitchen", rooms);
+                break;
             case "Lounge":
                 this.connectedRoom = findRoom("Conservatory", rooms);
+                break;
             case "Conservatory":
                 this.connectedRoom = findRoom("Lounge", rooms);
+                break;
+            default:
+                this.connectedRoom = null;
         }
     }
 
-    public room findRoom(String name, ArrayList<room> rooms){
-        room foundRoom = null;
-        for (room room : rooms){
+    public Room findRoom(String name, ArrayList<Room> rooms){
+        Room foundRoom = null;
+        for (Room room : rooms){
             if (room.getName().equals(name)){
                 foundRoom = room;
             }
@@ -34,6 +40,10 @@ public class room {
 
     public String getName(){
         return this.name;
+    }
+
+    public void setWeapon(Weapon weapon){
+        this.weapon = weapon;
     }
 }
 
