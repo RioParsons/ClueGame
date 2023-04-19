@@ -2,16 +2,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class CardDeck {
+    ArrayList<String> suspects;
     ArrayList<Weapon> weapons;
     ArrayList<Room> rooms;
-    ArrayList<String> suspects;
     ArrayList<String> cardNames;
     private static CardDeck uniqueInstance = null;
 
     private CardDeck(){
+        addSuspects();  
         addWeapons();
         addRooms();
-        addSuspects();
     }
 
     //Singleton pattern
@@ -20,6 +20,16 @@ public class CardDeck {
             uniqueInstance = new CardDeck();
         }
         return uniqueInstance;
+    }
+
+    public void addSuspects(){
+        this.suspects = new ArrayList<String>();
+        suspects.add("Miss Scarlett");
+        suspects.add("Professor Plum");
+        suspects.add("Mrs Peacock");
+        suspects.add("Reverend Green");
+        suspects.add("Colonel Mustard");
+        suspects.add("Dr Orchid");  
     }
 
     public void addWeapons(){
@@ -45,14 +55,8 @@ public class CardDeck {
         rooms.add(new Room("Ballroom"));
     }
 
-    public void addSuspects(){
-        this.suspects = new ArrayList<String>();
-        suspects.add("Miss Scarlett");
-        suspects.add("Professor Plum");
-        suspects.add("Mrs Peacock");
-        suspects.add("Reverend Green");
-        suspects.add("Colonel Mustard");
-        suspects.add("Dr Orchid");  
+    public ArrayList<String> getSuspects(){
+        return this.suspects;
     }
 
     public ArrayList<Weapon> getWeapons(){
@@ -62,9 +66,9 @@ public class CardDeck {
     public ArrayList<Room> getRooms(){
         return this.rooms;
     }
-
-    public ArrayList<String> getSuspects(){
-        return this.suspects;
+    
+    public void removeSuspect(int suspectIndex){
+        suspects.remove(suspectIndex);
     }
 
     public void removeWeapon(int weaponIndex){
@@ -73,10 +77,6 @@ public class CardDeck {
 
     public void removeRoom(int roomIndex){
         rooms.remove(roomIndex);
-    }
-
-    public void removeSuspect(int suspectIndex){
-        suspects.remove(suspectIndex);
     }
 
     public void dealCards(ArrayList<Player> players){
@@ -93,10 +93,9 @@ public class CardDeck {
         }
 
         //Testing
-        for (Player player : players){
-            ArrayList<String> pcards = player.getCards();
-            System.out.println("New Player");
-            System.out.println(pcards);            
+        for(Player player: players){
+            System.out.println(player.getName());
+            System.out.println(player.getCards());
         }
     }
 

@@ -1,14 +1,11 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class UserPlayer extends Player {
-    String type;
-    String name;
-    ArrayList<String> cards;
 
     public UserPlayer(String Name){
         super(Name);
         type = "User";
-        cards = new ArrayList<String>();
     }
 
     public void setType(String type){
@@ -23,17 +20,27 @@ public class UserPlayer extends Player {
         return this.name;
     }
 
-
-    public int rollDice(){
-        int roll = 0;
-        //TODO
-        return roll;
-    }
     public void move(){
-        //TODO
+        if (madeAccusation == false){
+            int n = rollDice();
+            //TODO move
+        }
     }
-    public void makeGuess(){
-        //TODO
+
+    public void makeSuggestion(ArrayList<Player> players){
+        //TODO make suggestion
+    }
+
+    public String proveWrong(ArrayList<String> guesses){
+        //TODO proveWrong
+        String proof = null;
+        return proof;
+    }
+
+    public ArrayList<String> makeSuggestion(){
+        ArrayList<String> guesses = new ArrayList<String>();
+        //TODO make suggestion
+        return guesses;
     }
     
 }

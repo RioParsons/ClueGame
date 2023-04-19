@@ -12,27 +12,33 @@ public class ClueGame {
     // There are seperate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
     public void playGame(){
         setupGame();
+        int i = 0; //Temporary, until the game can decide a winner
+        System.out.println("Making guesses");
         while (Winner == null){
-            playersMove();
+            playersTakeTurns();
+            i++;
+            if (i > 2){
+                break;
+            }
         }
     }
 
     public void setupGame(){
         this.cards = CardDeck.getInstance();
-        addWeapons();
         addSuspects();
+        addWeapons();
         addRooms();
         addPlayers();
         this.finalEnvelope = Envelope.getInstance(cards);
-        cards.dealCards(players);
-    }
-
-    public void addWeapons(){
-        this.weapons = cards.getWeapons();
+        dealCards();
     }
 
     public void addSuspects(){
         this.suspects = cards.getSuspects();
+    }
+
+    public void addWeapons(){
+        this.weapons = cards.getWeapons();
     }
 
     public void addRooms(){
@@ -67,21 +73,67 @@ public class ClueGame {
         }
     }
 
-    
     public void addPlayers(){
-        //TODO
+        //TODO add players
         players = new ArrayList<Player>();
-        players.add(new UserPlayer("Test1"));
-        players.add(new UserPlayer("Test 2"));
-        players.add(new UserPlayer("Test 3"));
-        players.add(new UserPlayer("Test 4"));
+        players.add(new AIPlayer("Test1"));
+        players.add(new AIPlayer("Test 2"));
+        players.add(new AIPlayer("Test 3"));
+        players.add(new AIPlayer("Test 4"));
 
     }
 
-    public void playersMove(){
+    public void dealCards(){
+        cards.dealCards(players);
 
+        //Remove cards dealt from player's guesssheet
+        ArrayList<String> cards;
+        for (Player player : players){
+            cards = player.getCards();
+            for (int i = 0; i < cards.size(); i++){
+                player.getSheet().removeItem(cards.get(i));
+            }
+        }
     }
 
+    public void playersTakeTurns(){
+        for(Player p: players){
+            p.move();
+            ArrayList<String> guesses = p.makeSuggestion();
+            System.out.println(p.getName());
+            System.out.println(guesses);
+            playersProveWrong(guesses, p);
+        }
+    }
 
-    
+    public void playersProveWrong(ArrayList<String> guesses, Player p){
+        // Have other players prove wrong
+        String proof = null;
+        int i = 0; 
+        while(proof == null && i < players.size()){
+            proof = players.get(i).proveWrong(guesses);
+            i++;
+        }
+
+        // If no players could prove suggestion wrong, make accusation.
+        if (proof == null){
+            makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
+        } else {
+            p.getSheet().removeItem(proof);
+        }   
+    }
+
+    public void makeAccusation(String Murderer, String Weapon, String Room, Player player){
+        boolean correct = finalEnvelope.checkAccusation(Murderer, Weapon, Room);
+        if (correct == true){
+            Winner = player;
+            System.out.println(player.getName() + "Won the game!");
+            System.out.println("They correctly guessed that "+ Murderer + " killed Mr. John Boddy with a " + Weapon + " in the " + Room );
+            //End Game
+        } else {
+            player.madeFalseAccusation();   
+        }
+
+
+    }
 }
