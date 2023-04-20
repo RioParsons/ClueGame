@@ -12,12 +12,13 @@ public class ClueGame {
     // There are seperate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
     public void playGame(){
         setupGame();
-        int i = 0; //Temporary, until the game can decide a winner
-        System.out.println("Making guesses");
+        int i = 1; //Temporary, until the game can decide a winner
+        System.out.println("\n -------Making guesses------");
         while (Winner == null){
+            System.out.println("Turn " + i ); //Temorary, testing
             playersTakeTurns();
             i++;
-            if (i > 2){
+            if (i > 50){
                 break;
             }
         }
@@ -98,9 +99,12 @@ public class ClueGame {
 
     public void playersTakeTurns(){
         for(Player p: players){
+            if (Winner != null){
+                break;
+            }
             p.move();
             ArrayList<String> guesses = p.makeSuggestion();
-            System.out.println(p.getName());
+            System.out.println(p.getName()); //Temporary, testing
             System.out.println(guesses);
             playersProveWrong(guesses, p);
         }
@@ -127,7 +131,7 @@ public class ClueGame {
         boolean correct = finalEnvelope.checkAccusation(Murderer, Weapon, Room);
         if (correct == true){
             Winner = player;
-            System.out.println(player.getName() + "Won the game!");
+            System.out.println(player.getName() + " Won the game!");
             System.out.println("They correctly guessed that "+ Murderer + " killed Mr. John Boddy with a " + Weapon + " in the " + Room );
             //End Game
         } else {
