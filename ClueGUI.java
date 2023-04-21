@@ -93,5 +93,9 @@ public class ClueGUI extends JFrame {
         }
         int result = JOptionPane.showOptionDialog(null, panel, "Select a character",
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+        ClueBoard board = new ClueBoard();
+        board.initializeBoard();
+        this.setVisible(false);
     }
 }
