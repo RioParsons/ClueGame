@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ClueBoard extends JPanel {
@@ -76,7 +78,7 @@ public class ClueBoard extends JPanel {
     }
 
     private String getRoomName(int row, int col) {
-        // Define the names of the rooms based on their positions
+        // Names of the rooms based on their positions
         if (row == 2 && col == 3) {
             return "Study";
         } else if (row == 8 && col == 3) {
@@ -112,11 +114,8 @@ public class ClueBoard extends JPanel {
         frame.setSize((TILE_SIZE * NUM_COLS + 2) + 500, TILE_SIZE * NUM_ROWS + 2);
         frame.setResizable(false);
 
-        // Create a new JPanel to hold both the ClueBoard and the player image
+        // JPanel to hold both the ClueBoard and the player image
         JPanel contentPane = new JPanel(new BorderLayout());
-
-        // Add the ClueBoard to the content pane
-        //ClueBoard board = new ClueBoard();
         contentPane.add(this, BorderLayout.CENTER);
 
         // Load the player image
@@ -124,6 +123,35 @@ public class ClueBoard extends JPanel {
         ImageIcon playerIcon = new ImageIcon(new ImageIcon(userImage).getImage().getScaledInstance(150,350,java.awt.Image.SCALE_SMOOTH ));
         JLabel playerLabel = new JLabel(playerIcon);
         contentPane.add(playerLabel, BorderLayout.EAST);
+
+        JPanel dicePanel = new JPanel();
+        dicePanel.setPreferredSize(new Dimension(200, 100));
+        ImageIcon diceIcon1 = new ImageIcon(new ImageIcon("resources/Dice_3.png").getImage().getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH ));
+        JLabel diceLabel1 = new JLabel(diceIcon1);
+        dicePanel.add(diceLabel1);
+        ImageIcon diceIcon2 = new ImageIcon(new ImageIcon("resources/Dice_5.png").getImage().getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH ));
+        JLabel diceLabel2 = new JLabel(diceIcon2);
+        dicePanel.add(diceLabel2);
+        JButton rollDice = new JButton("Roll Dice");
+        rollDice.setSize(150, 70);
+        // Add action listener to rollDice button
+        rollDice.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Generate random dice rolls
+                int dice1 = (int) (Math.random() * 6) + 1; // generate a number between 1 and 6
+                int dice2 = (int) (Math.random() * 6) + 1; // generate a number between 1 and 6
+
+                // Set diceIcon1 and diceIcon2 to new values based on dice rolls
+                diceIcon1.setImage(new ImageIcon("resources/Dice_" + dice1 + ".png").getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
+                diceLabel1.repaint();
+                diceIcon2.setImage(new ImageIcon("resources/Dice_" + dice2 + ".png").getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
+                diceLabel2.repaint();
+            }
+        });
+
+        dicePanel.add(rollDice);
+        contentPane.add(dicePanel, BorderLayout.SOUTH);
 
         // Create a new JPanel to hold the card icons
         JPanel cardPanel = new JPanel(new GridLayout(3, 2));
