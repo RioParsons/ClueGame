@@ -11,6 +11,8 @@ public class ClueGUI extends JFrame {
     private static final String IMAGE_PATH = "resources/";
     private Command currentCommand;
 
+    private UserPlayer userPlayer;
+
     public ClueGUI() {
         currentCommand = new StartGameCommand(this);
         currentCommand.execute();
@@ -47,7 +49,6 @@ public class ClueGUI extends JFrame {
     public static Image loadImage(String filename){
         try {
             URL imageURL = new URL("file://"+ new File(IMAGE_PATH + filename).getAbsolutePath());
-            System.out.println(imageURL);
             Image img = ImageIO.read(imageURL);
             return img;
         } catch (Exception e) {
@@ -57,15 +58,11 @@ public class ClueGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new ClueGUI();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        try {
+            new ClueGUI();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void showSetupDialog() {
@@ -94,7 +91,14 @@ public class ClueGUI extends JFrame {
         int result = JOptionPane.showOptionDialog(null, panel, "Select a character",
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
-        ClueBoard board = new ClueBoard();
+        for (int i = 0; i < buttons.length; i++) {
+            if (buttons[i].isSelected()) {
+                userPlayer = new UserPlayer(characters[i]);
+                break;
+            }
+        }
+
+        ClueBoard board = new ClueBoard(userPlayer);
         board.initializeBoard();
         this.setVisible(false);
     }

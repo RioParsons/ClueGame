@@ -128,4 +128,95 @@ public class CardDeck {
         cardNames.addAll(suspects);
     }
 
+    public String getCardImage(String card) {
+        String image = "";
+
+        switch (card) {
+            case "Revolver":
+                image = "resources/revolver.jpg";
+                break;
+
+            case "Knife":
+                image = "resources/dagger.jpg";
+                break;
+
+            case "Lead Piping":
+                image = "resources/leadpipe.jpg";
+                break;
+
+            case "Rope":
+                image = "resources/rope.jpg";
+                break;
+
+            case "Wrench":
+                image = "resources/wrench.jpg";
+                break;
+
+            case "Candlestick":
+                image = "resources/candlestick.jpg";
+                break;
+
+            case "Kitchen":
+                image = "resources/kitchen.jpg";
+                break;
+
+            case "Dining Room":
+                image = "resources/dining.jpg";
+                break;
+
+            case "Lounge":
+                image = "resources/lounge.jpg";
+                break;
+
+            case "Hall":
+                image = "resources/hall.jpg";
+                break;
+
+            case "Study":
+                image = "resources/study.jpg";
+                break;
+
+            case "Library":
+                image = "resources/library.jpg";
+                break;
+
+            case "Billiard Room":
+                image = "resources/billiard.jpg";
+                break;
+
+            case "Conservatory":
+                image = "resources/conservatory.jpg";
+                break;
+
+            case "Ballroom":
+                image = "resources/ballroom.jpg";
+                break;
+
+            case "Miss Scarlett":
+                image = "resources/scarlet_card.jpg";
+                break;
+
+            case "Professor Plum":
+                image = "resources/plum_card.jpg";
+                break;
+
+            case "Reverend Green":
+                image = "resources/green_card.jpg";
+                break;
+
+            case "Colonel Mustard":
+                image = "resources/mustard_card.jpg";
+                break;
+
+            case "Mrs Peacock":
+                image = "resources/peacock_card.jpg";
+                break;
+
+            case "Dr Orchid":
+                image = "resources/orchid_card.jpg";
+                break;
+        }
+
+        return image;
+    }
 }

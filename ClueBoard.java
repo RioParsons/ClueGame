@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ClueBoard extends JPanel {
     private static final int TILE_SIZE = 38;
@@ -9,11 +10,13 @@ public class ClueBoard extends JPanel {
     private static final Color BORDER_COLOR = new Color(0, 0, 0);
     private static final Color ROOM_COLOR = new Color(17, 147, 194);
     private static final Color HALLWAY_COLOR = new Color(252, 174, 61);
+    UserPlayer userPlayer;
 
     private JPanel[][] tiles;
     private JPanel playerPanel;
 
-    public ClueBoard() {
+    public ClueBoard(UserPlayer userPlayer) {
+        this.userPlayer = userPlayer;
         setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
         setBackground(BACKGROUND_COLOR);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
@@ -113,11 +116,12 @@ public class ClueBoard extends JPanel {
         JPanel contentPane = new JPanel(new BorderLayout());
 
         // Add the ClueBoard to the content pane
-        ClueBoard board = new ClueBoard();
-        contentPane.add(board, BorderLayout.CENTER);
+        //ClueBoard board = new ClueBoard();
+        contentPane.add(this, BorderLayout.CENTER);
 
         // Load the player image
-        ImageIcon playerIcon = new ImageIcon(new ImageIcon("resources/scarlet.png").getImage().getScaledInstance(150,350,java.awt.Image.SCALE_SMOOTH ));
+        String userImage = userPlayer.getImage();
+        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userImage).getImage().getScaledInstance(150,350,java.awt.Image.SCALE_SMOOTH ));
         JLabel playerLabel = new JLabel(playerIcon);
         contentPane.add(playerLabel, BorderLayout.EAST);
 
@@ -126,31 +130,16 @@ public class ClueBoard extends JPanel {
         cardPanel.setPreferredSize(new Dimension(200, 300));
         contentPane.add(cardPanel, BorderLayout.WEST);
 
-        // Add the card icons to the panel
-        ImageIcon cardIcon1 = new ImageIcon(new ImageIcon("resources/peacock_card.jpg").getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
-        JLabel cardLabel1 = new JLabel(cardIcon1);
-        cardPanel.add(cardLabel1);
+        CardDeck cards = CardDeck.getInstance();
+        cards.shuffleCards();
+        userPlayer.cards = new ArrayList<>(cards.cardNames.subList(0, 6));
+        for(String card : userPlayer.cards) {
+            ImageIcon cardIcon1 = new ImageIcon(new ImageIcon(cards.getCardImage(card)).getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
+            JLabel cardLabel1 = new JLabel(cardIcon1);
+            cardPanel.add(cardLabel1);
+        }
 
-        ImageIcon cardIcon2 = new ImageIcon(new ImageIcon("resources/peacock_card.jpg").getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
-        JLabel cardLabel2 = new JLabel(cardIcon2);
-        cardPanel.add(cardLabel2);
-
-        ImageIcon cardIcon3 = new ImageIcon(new ImageIcon("resources/peacock_card.jpg").getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
-        JLabel cardLabel3 = new JLabel(cardIcon3);
-        cardPanel.add(cardLabel3);
-
-        ImageIcon cardIcon4 = new ImageIcon(new ImageIcon("resources/peacock_card.jpg").getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
-        JLabel cardLabel4 = new JLabel(cardIcon4);
-        cardPanel.add(cardLabel4);
-
-        ImageIcon cardIcon5 = new ImageIcon(new ImageIcon("resources/peacock_card.jpg").getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
-        JLabel cardLabel5 = new JLabel(cardIcon5);
-        cardPanel.add(cardLabel5);
-
-        ImageIcon cardIcon6 = new ImageIcon(new ImageIcon("resources/peacock_card.jpg").getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
-        JLabel cardLabel6 = new JLabel(cardIcon6);
-        cardPanel.add(cardLabel6);
-
+        frame.setLocationRelativeTo(null);
         frame.setContentPane(contentPane);
         frame.setVisible(true);
     }

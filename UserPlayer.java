@@ -20,6 +20,38 @@ public class UserPlayer extends Player {
         return this.name;
     }
 
+    public String getImage() {
+        String image = "";
+
+        switch (name) {
+            case "Miss Scarlet":
+                image = "resources/scarlet.png";
+                break;
+
+            case "Professor Plum":
+                image = "resources/plum.png";
+                break;
+
+            case "Reverend Green":
+                image = "resources/green.png";
+                break;
+
+            case "Colonel Mustard":
+                image = "resources/mustard.png";
+                break;
+
+            case "Mrs. Peacock":
+                image = "resources/peacock.png";
+                break;
+
+            case "Dr. Orchid":
+                image = "resources/orchid.png";
+                break;
+        }
+
+        return image;
+    }
+
     public void move(){
         if (madeAccusation == false){
             int n = rollDice();
