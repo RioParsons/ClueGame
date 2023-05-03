@@ -50,12 +50,12 @@ public class CardDeck {
     public void addRooms(){
         this.rooms = new ArrayList<Room>();
         rooms.add(new Room("Kitchen"));
-        rooms.add(new Room("Dining game.Room"));
+        rooms.add(new Room("Dining Room"));
         rooms.add(new Room("Lounge"));
         rooms.add(new Room("Hall"));
         rooms.add(new Room("Study"));
         rooms.add(new Room("Library"));
-        rooms.add(new Room("Billiard game.Room"));
+        rooms.add(new Room("Billiard Room"));
         rooms.add(new Room("Conservatory"));
         rooms.add(new Room("Ballroom"));
     }
@@ -167,7 +167,7 @@ public class CardDeck {
                 image = "resources/kitchen.jpg";
                 break;
 
-            case "Dining game.Room":
+            case "Dining Room":
                 image = "resources/dining.jpg";
                 break;
 
@@ -187,7 +187,7 @@ public class CardDeck {
                 image = "resources/library.jpg";
                 break;
 
-            case "Billiard game.Room":
+            case "Billiard Room":
                 image = "resources/billiard.jpg";
                 break;
 

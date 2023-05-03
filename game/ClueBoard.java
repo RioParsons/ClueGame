@@ -137,6 +137,34 @@ public class ClueBoard extends JPanel implements GameObserver {
         JLabel playerLabel = new JLabel(playerIcon);
         contentPane.add(playerLabel, BorderLayout.EAST);
 
+        // JPanel to hold the buttons for making accusations and guesses
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
+        buttonPanel.setPreferredSize(new Dimension(100, 100));
+
+        // JButton to make an accusation
+        JButton accuseButton = new JButton("Make Accusation");
+        accuseButton.setSize(150, 70);
+        accuseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                makeAccusation();
+            }
+        });
+        buttonPanel.add(accuseButton);
+
+        // JButton to make a guess
+        JButton guessButton = new JButton("Make Guess");
+        guessButton.setSize(150, 100);
+        guessButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                makeGuess();
+            }
+        });
+        buttonPanel.add(guessButton);
+
+        contentPane.add(buttonPanel, BorderLayout.NORTH);
+
         JPanel dicePanel = new JPanel();
         dicePanel.setPreferredSize(new Dimension(200, 100));
         ImageIcon diceIcon1 = new ImageIcon(new ImageIcon("resources/Dice_3.png").getImage().getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH ));
@@ -189,4 +217,15 @@ public class ClueBoard extends JPanel implements GameObserver {
     public void update(Player player, String message) {
         System.out.println(player.getName() + message);
     }
+
+    public void makeGuess() {
+        GuessDialog dialog = new GuessDialog((JFrame) SwingUtilities.getWindowAncestor(this));
+        dialog.setVisible(true);
+    }
+
+    public void makeAccusation() {
+        AccuseDialog dialog = new AccuseDialog((JFrame) SwingUtilities.getWindowAncestor(this));
+        dialog.setVisible(true);
+    }
+
 }
