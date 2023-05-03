@@ -1,9 +1,18 @@
+package main;
+
+import command.Command;
+import command.ShowSetupDialogCommand;
+import command.StartGameCommand;
+import game.ClueBoard;
+import player.UserPlayer;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
 
+/* GUI to start Clue game */
 public class ClueGUI extends JFrame {
     private JPanel window;
     public static final Image HOME_SCREEN = loadImage("Clue-home-page.png");

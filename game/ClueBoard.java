@@ -1,9 +1,16 @@
+package game;
+
+import game.CardDeck;
+import player.Player;
+import player.UserPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/* Clue game board UI */
 public class ClueBoard extends JPanel implements GameObserver {
     private static final int TILE_SIZE = 38;
     private static final int NUM_ROWS = 22;
@@ -140,7 +147,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         dicePanel.add(diceLabel2);
         JButton rollDice = new JButton("Roll Dice");
         rollDice.setSize(150, 70);
-        // Add action listener to rollDice button
+        // rollDice button
         rollDice.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -159,7 +166,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         dicePanel.add(rollDice);
         contentPane.add(dicePanel, BorderLayout.SOUTH);
 
-        // Create a new JPanel to hold the card icons
+        //JPanel to hold the card icons
         JPanel cardPanel = new JPanel(new GridLayout(3, 2));
         cardPanel.setPreferredSize(new Dimension(200, 300));
         contentPane.add(cardPanel, BorderLayout.WEST);

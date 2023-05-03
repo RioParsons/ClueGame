@@ -1,3 +1,10 @@
+package game;
+
+import game.CardDeck;
+import game.Weapon;
+import player.AIPlayer;
+import player.Player;
+
 import java.util.ArrayList;
 import java.util.Random;
 public class ClueGame {

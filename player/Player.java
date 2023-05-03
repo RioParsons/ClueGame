@@ -1,10 +1,15 @@
+package player;
+
+import game.GameObserver;
+import game.GuessSheet;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Player {
     String type;
     String name;
-    ArrayList<String> cards;
+    public ArrayList<String> cards;
     GuessSheet guessSheet;
     boolean madeAccusation;
     private ArrayList<GameObserver> observers = new ArrayList<>();

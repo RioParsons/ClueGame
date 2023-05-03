@@ -1,6 +1,9 @@
+package player;
+
 import java.util.ArrayList;
 import java.util.Random;
 
+/* Strategy Pattern - UserPlayer */
 public class UserPlayer extends Player {
 
     public UserPlayer(String Name){

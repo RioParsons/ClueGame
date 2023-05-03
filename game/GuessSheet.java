@@ -1,3 +1,5 @@
+package game;
+
 import java.util.ArrayList;
 
 public class GuessSheet {
@@ -24,12 +26,12 @@ public class GuessSheet {
     public void addRooms(){
         this.rooms = new ArrayList<String>();
         rooms.add("Kitchen");
-        rooms.add("Dining Room");
+        rooms.add("Dining game.Room");
         rooms.add("Lounge");
         rooms.add("Hall");
         rooms.add("Study");
         rooms.add("Library");
-        rooms.add("Billiard Room");
+        rooms.add("Billiard game.Room");
         rooms.add("Conservatory");
         rooms.add("Ballroom");
     }

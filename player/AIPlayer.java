@@ -1,7 +1,10 @@
+package player;
+
 import java.util.ArrayList;
 import java.util.Random;
 
-public class AIPlayer extends Player{
+/* Strategy pattern - AI Player */
+public class AIPlayer extends Player {
 
     public AIPlayer(String Name){
         super(Name);

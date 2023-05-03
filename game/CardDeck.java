@@ -1,6 +1,11 @@
+package game;
+
+import player.Player;
+
 import java.util.ArrayList;
 import java.util.Random;
 
+/* Card Deck - Suspects, Weapons, rooms */
 public class CardDeck {
     ArrayList<String> suspects;
     ArrayList<Weapon> weapons;
@@ -14,7 +19,7 @@ public class CardDeck {
         addRooms();
     }
 
-    //Singleton pattern
+    /* Singleton pattern - Lazy instantiation */
     public static CardDeck getInstance(){
         if(uniqueInstance == null){
             uniqueInstance = new CardDeck();
@@ -45,12 +50,12 @@ public class CardDeck {
     public void addRooms(){
         this.rooms = new ArrayList<Room>();
         rooms.add(new Room("Kitchen"));
-        rooms.add(new Room("Dining Room"));
+        rooms.add(new Room("Dining game.Room"));
         rooms.add(new Room("Lounge"));
         rooms.add(new Room("Hall"));
         rooms.add(new Room("Study"));
         rooms.add(new Room("Library"));
-        rooms.add(new Room("Billiard Room"));
+        rooms.add(new Room("Billiard game.Room"));
         rooms.add(new Room("Conservatory"));
         rooms.add(new Room("Ballroom"));
     }
@@ -93,13 +98,14 @@ public class CardDeck {
         }
 
         //Testing
-        System.out.println("---Player's cards-----");
+        System.out.println("---player.Player's cards-----");
         for(Player player: players){
             System.out.println(player.getName()+"'s cards: ");
             System.out.println(player.getCards());
         }
     }
 
+    /* Shuffle cards randomly */
     public void shuffleCards(){
         makeCardNames();
 
@@ -128,6 +134,7 @@ public class CardDeck {
         cardNames.addAll(suspects);
     }
 
+    /* Get card image to display player cards */
     public String getCardImage(String card) {
         String image = "";
 
@@ -160,7 +167,7 @@ public class CardDeck {
                 image = "resources/kitchen.jpg";
                 break;
 
-            case "Dining Room":
+            case "Dining game.Room":
                 image = "resources/dining.jpg";
                 break;
 
@@ -180,7 +187,7 @@ public class CardDeck {
                 image = "resources/library.jpg";
                 break;
 
-            case "Billiard Room":
+            case "Billiard game.Room":
                 image = "resources/billiard.jpg";
                 break;
 

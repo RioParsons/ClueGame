@@ -1,3 +1,5 @@
+package game;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,7 +15,7 @@ public class Envelope {
         generateRoom(cards);
     }
 
-    //Singleton pattern
+    /* Singleton pattern */
     public static Envelope getInstance(CardDeck cards){
         if(uniqueInstance == null){
             uniqueInstance = new Envelope(cards);

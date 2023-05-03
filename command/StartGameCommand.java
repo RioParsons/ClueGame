@@ -1,3 +1,8 @@
+package command;
+
+import main.ClueGUI;
+
+/* Command Pattern - Start game */
 public class StartGameCommand implements Command {
     private ClueGUI gui;
 
