@@ -13,6 +13,7 @@ public class Envelope {
         generateMurderer(cards);
         generateWeapon(cards);
         generateRoom(cards);
+        System.out.println("Generated Envelope : "+this.murderer+" "+this.weapon+" "+this.room);
     }
 
     /* Singleton pattern */
@@ -51,7 +52,7 @@ public class Envelope {
     }
 
     public boolean checkAccusation(String murderer, String weapon, String room){
-        if ((this.murderer.equals(murderer)) && (this.room == room) && this.weapon == weapon) {
+        if ((this.murderer.equals(murderer)) && (this.room.equals(room)) && (this.weapon.equals(weapon))) {
             return true;
         } else {
             return false;

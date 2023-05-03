@@ -10,6 +10,8 @@ public class AccuseDialog extends JDialog {
     private JButton okButton;
     private JButton cancelButton;
 
+    Envelope envelope = Envelope.getInstance(CardDeck.getInstance());
+
     public AccuseDialog(JFrame parent) {
         super(parent, "Make a Guess", true);
 
@@ -40,7 +42,7 @@ public class AccuseDialog extends JDialog {
 
         // Add action listeners to buttons
         okButton.addActionListener(e -> {
-            // Handle OK button action
+            checkAccusation();
             dispose();
         });
         cancelButton.addActionListener(e -> {
@@ -59,6 +61,16 @@ public class AccuseDialog extends JDialog {
 
     public String getRoom() {
         return (String) roomCombo.getSelectedItem();
+    }
+
+    void checkAccusation() {
+        boolean isValid = envelope.checkAccusation(getPerson(), getWeapon(), getRoom());
+        if(isValid) {
+            JOptionPane.showMessageDialog(this, "Congratulations! You are the winner!");
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "Wrong Accusation! You Lose!");
+        }
     }
 
 }
