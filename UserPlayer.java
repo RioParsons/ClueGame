@@ -17,13 +17,13 @@ public class UserPlayer extends Player {
     }
 
     public String getName(){
-        return this.name;
+        return name;
     }
 
     public String getImage() {
         String image = "";
 
-        switch (name) {
+        switch (this.getName()) {
             case "Miss Scarlet":
                 image = "resources/scarlet.png";
                 break;
@@ -52,7 +52,10 @@ public class UserPlayer extends Player {
         return image;
     }
 
-    public void move(){
+    public void move(int spaces){
+
+        notifyObservers(name + " moved " + spaces + " spaces.");
+
         if (madeAccusation == false){
             int n = rollDice();
             //TODO move

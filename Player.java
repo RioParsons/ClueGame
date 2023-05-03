@@ -7,12 +7,26 @@ public abstract class Player {
     ArrayList<String> cards;
     GuessSheet guessSheet;
     boolean madeAccusation;
+    private ArrayList<GameObserver> observers = new ArrayList<>();
 
     public Player(String Name){
         this.name = Name;
         cards = new ArrayList<String>();
         guessSheet = new GuessSheet();
         madeAccusation = false;
+    }
+    public void registerObserver(GameObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(GameObserver observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers(String message) {
+        for (GameObserver observer : observers) {
+            observer.update(this, message);
+        }
     }
 
     public void giveCard(String card){
@@ -47,7 +61,7 @@ public abstract class Player {
         return roll;
     }
 
-    public abstract void move();
+    public abstract void move(int spaces);
     public abstract ArrayList<String> makeSuggestion();
     public abstract String proveWrong(ArrayList<String> guesses);
     

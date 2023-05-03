@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ClueBoard extends JPanel {
+public class ClueBoard extends JPanel implements GameObserver {
     private static final int TILE_SIZE = 38;
     private static final int NUM_ROWS = 22;
     private static final int NUM_COLS = 20;
@@ -13,12 +13,18 @@ public class ClueBoard extends JPanel {
     private static final Color ROOM_COLOR = new Color(17, 147, 194);
     private static final Color HALLWAY_COLOR = new Color(252, 174, 61);
     UserPlayer userPlayer;
+    private ArrayList<Player> players;
 
     private JPanel[][] tiles;
     private JPanel playerPanel;
 
     public ClueBoard(UserPlayer userPlayer) {
         this.userPlayer = userPlayer;
+        players = new ArrayList<>();
+        players.add(userPlayer);
+        for (Player player : players) {
+            player.registerObserver(this);
+        }
         setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
         setBackground(BACKGROUND_COLOR);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
@@ -170,5 +176,10 @@ public class ClueBoard extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setContentPane(contentPane);
         frame.setVisible(true);
+    }
+
+    @Override
+    public void update(Player player, String message) {
+        System.out.println(player.getName() + message);
     }
 }

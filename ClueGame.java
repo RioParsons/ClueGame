@@ -9,7 +9,7 @@ public class ClueGame {
     Envelope finalEnvelope;
     Player Winner;
 
-    // There are seperate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
+    // There are separate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
     public void playGame(){
         setupGame();
         int i = 1; //Temporary, until the game can decide a winner
@@ -102,7 +102,7 @@ public class ClueGame {
             if (Winner != null){
                 break;
             }
-            p.move();
+            p.move(0);
             ArrayList<String> guesses = p.makeSuggestion();
             System.out.println(p.getName()); //Temporary, testing
             System.out.println(guesses);

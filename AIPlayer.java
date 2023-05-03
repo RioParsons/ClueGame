@@ -17,10 +17,11 @@ public class AIPlayer extends Player{
     }
 
     public String getName(){
-        return this.name;
+        return name;
     }
 
-    public void move(){
+    public void move(int spaces){
+        notifyObservers(this.getName() + " moved " + spaces + " spaces.");
         if (madeAccusation == false){
             int n = rollDice();
             //TODO move
