@@ -9,6 +9,7 @@ import player.UserPlayer;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 public class ClueGame {
     CardDeck cards;
@@ -20,6 +21,8 @@ public class ClueGame {
     Player Winner;
     ClueBoard board;
     int numPlayers;
+    boolean userTurn;
+    CountDownLatch latch;
 
     // There are separate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
     public void playGame(int numPlayers, String userPlayer){
@@ -27,14 +30,13 @@ public class ClueGame {
         setupGame(userPlayer);
         int i = 1; //Temporary, until the game can decide a winner
         System.out.println("\n -------Making guesses------");
-        while (Winner == null){
-            System.out.println("Turn " + i ); //Temorary, testing
-            playersTakeTurns();
-            i++;
-            if (i > 50){
-                break;
-            }
-        }
+            //System.out.println("Turn " + i ); //Temorary, testing
+            userTurn();
+            // i++;
+            // if (i > 50){
+            //     break;
+            // }
+        
     }
 
     public void setupGame(String UserPlayer){
@@ -48,6 +50,7 @@ public class ClueGame {
         addBoard();
     }
 
+    // Setup Functions
     public void addSuspects(){
         this.suspects = cards.getSuspects();
     }
@@ -120,33 +123,32 @@ public class ClueGame {
     }
 
     public void addBoard(){
-        this.board = new ClueBoard(players);
+        this.board = new ClueBoard(players, this);
         board.initializeBoard();
     }
 
-    public void playersTakeTurns(){
-        for(Player p: players){
+    //Play Game functions
+
+    public void userTurn(){
+        Player p = players.get(0);
+        board.renderUserTurn(p);
+        System.out.println("User turn");
+    }
+
+    public void AIPlayersTakeTurns(){
+        //Starting at second player because first player is always the user
+        for (int i=1; i < players.size(); i++){
             if (Winner != null){
                 break;
             }
-
-            if (p.getType().equals("User")){
-                userTurn(p);
-            } else if (p.getType().equals("AI")){
-                AITurn(p);
-            }
+            AITurn(players.get(i));
+            //board.movePlayerToken(i);
         }
-    }
 
-    public void userTurn(Player p){
-        boolean userTurn = true;
-        board.renderUserTurn(p);
-        while(userTurn == false){
-            try {
-               Thread.sleep(200);
-            } catch(InterruptedException e) {
-            }
+        if (Winner == null){
+            userTurn();
         }
+        board.rollDice.setEnabled(true);
     }
 
     public void AITurn(Player p){
@@ -155,6 +157,7 @@ public class ClueGame {
         System.out.println(p.getName()); //Temporary, testing
         System.out.println(guesses);
         playersProveWrong(guesses, p);
+        
 
     }
 
@@ -185,7 +188,10 @@ public class ClueGame {
         } else {
             player.madeFalseAccusation();   
         }
+    }
 
-
+    public void endUserTurn(){
+        latch.countDown();
+        userTurn=false;
     }
 }

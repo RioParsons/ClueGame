@@ -23,8 +23,9 @@ public class ClueBoard extends JPanel implements GameObserver {
     private static final Color HALLWAY_COLOR = new Color(252, 174, 61);
     private static final Color POSSIBLE_MOVE_COLOR = new Color(144, 238, 144);
     Player userPlayer;
-    private ArrayList<Player> players;
-    private int numPlayers;
+    boolean userTurn;
+    ClueGame game;
+    ArrayList<Player> players;
 
     JButton rollDice;
     JButton endTurn;
@@ -39,7 +40,8 @@ public class ClueBoard extends JPanel implements GameObserver {
 
     private JPanel[][] tiles;
 
-    public ClueBoard(ArrayList<Player> players) {
+    public ClueBoard(ArrayList<Player> players, ClueGame game) {
+        this.game = game;
         this.players=players;
         this.userPlayer = players.get(0);
         userPlayer.registerObserver(this);
@@ -227,11 +229,11 @@ public class ClueBoard extends JPanel implements GameObserver {
         this.endTurn = new JButton("End Turn");
         endTurn.setSize(150, 70);
         endTurn.setEnabled(false);
+        dicePanel.add(endTurn);
         endTurn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //moveAI1Token();
-                //moveAI2Token();
+                game.AIPlayersTakeTurns();
             }
         });
         dicePanel.add(endTurn);
@@ -355,6 +357,7 @@ public class ClueBoard extends JPanel implements GameObserver {
                     deleteButtons(panels, buttons);
                     moveUserToken(userPlayer.getPos());
                     endTurn.setEnabled(true);
+                    System.out.println("Player moved");
 
                 }
             });
@@ -382,10 +385,37 @@ public class ClueBoard extends JPanel implements GameObserver {
 
         ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
             .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-            playerPanel = tiles[pos[0]][pos[1]];
-            playerPanel.add(new JLabel(playerIcon));
-            playerPanel.revalidate();
-            playerPanel.repaint();
+        playerPanel = tiles[pos[0]][pos[1]];
+        playerPanel.add(new JLabel(playerIcon));
+        playerPanel.revalidate();
+        playerPanel.repaint();
+
+        playerPanels.set(0, playerPanel);
+
+
+    }
+
+    public void movePlayerToken(int[] pos){
+        // Remove the old player token
+        JPanel playerPanel = playerPanels.get(0);
+        Component[] components = playerPanel.getComponents();
+        for (Component c : components) {
+            playerPanel.remove(c);
+        }
+        playerPanel.revalidate();
+        playerPanel.repaint();
+        playerPanel = tiles[pos[0]][pos[1]];
+
+        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
+            .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+        playerPanel = tiles[pos[0]][pos[1]];
+        playerPanel.add(new JLabel(playerIcon));
+        playerPanel.revalidate();
+        playerPanel.repaint();
+
+        playerPanels.set(0, playerPanel);
+
+
     }
 
 }
