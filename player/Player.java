@@ -12,6 +12,7 @@ public abstract class Player {
     public ArrayList<String> cards;
     GuessSheet guessSheet;
     boolean madeAccusation;
+    int[] position;
     private ArrayList<GameObserver> observers = new ArrayList<>();
 
     public Player(String Name){
@@ -19,6 +20,7 @@ public abstract class Player {
         cards = new ArrayList<String>();
         guessSheet = new GuessSheet();
         madeAccusation = false;
+        this.getStartPos();
     }
     public void registerObserver(GameObserver observer) {
         observers.add(observer);
@@ -32,6 +34,38 @@ public abstract class Player {
         for (GameObserver observer : observers) {
             observer.update(this, message);
         }
+    }
+
+    public String getImage() {
+        String image = "";
+
+        switch (this.getName()) {
+            case "Miss Scarlett":
+                image = "resources/scarlet.png";
+                break;
+
+            case "Professor Plum":
+                image = "resources/plum.png";
+                break;
+
+            case "Reverend Green":
+                image = "resources/green.png";
+                break;
+
+            case "Colonel Mustard":
+                image = "resources/mustard.png";
+                break;
+
+            case "Mrs Peacock":
+                image = "resources/peacock.png";
+                break;
+
+            case "Dr Orchid":
+                image = "resources/orchid.png";
+                break;
+        }
+
+        return image;
     }
 
     public void giveCard(String card){
@@ -54,6 +88,10 @@ public abstract class Player {
         return this.guessSheet;
     }
 
+    public int[] getPos(){
+        return this.position;
+    }
+
     public void madeFalseAccusation(){
         madeAccusation=true;
     }
@@ -64,6 +102,24 @@ public abstract class Player {
         int secondDie = n.nextInt(6) + 1;
         int roll = firstDie + secondDie;
         return roll;
+    }
+
+    public void getStartPos(){
+        if (this.name.equals("Miss Scarlett")){
+            this.position = new int[]{21, 13};
+        } else if (this.name.equals("Professor Plum")){
+            this.position=new int[]{10, 0};
+        } else if (this.name.equals("Mrs Peacock")){
+            this.position=new int[]{0, 12};
+        } else if (this.name.equals("Reverend Green")){
+            this.position=new int[]{0, 7};
+        } else if (this.name.equals("Colonel Mustard")){
+            this.position=new int[]{13, 19};
+        } else if (this.name.equals("Dr Orchid")){
+            this.position=new int[]{21, 7};
+        } else {
+            this.position = new int[]{-1, -1};
+        }
     }
 
     public abstract void move(int spaces);

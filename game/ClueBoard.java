@@ -19,8 +19,11 @@ public class ClueBoard extends JPanel implements GameObserver {
     private static final Color BORDER_COLOR = new Color(0, 0, 0);
     private static final Color ROOM_COLOR = new Color(17, 147, 194);
     private static final Color HALLWAY_COLOR = new Color(252, 174, 61);
-    UserPlayer userPlayer;
+    Player userPlayer;
     private ArrayList<Player> players;
+    private int numPlayers;
+
+    ArrayList<JPanel> playerPanels;
 
     private JPanel[][] tiles;
     private JPanel playerPanel;
@@ -31,16 +34,14 @@ public class ClueBoard extends JPanel implements GameObserver {
     private int[] currentPlayer2Pos;
     private int[] currentPlayer3Pos;
 
-    public ClueBoard(UserPlayer userPlayer) {
-        this.userPlayer = userPlayer;
-        players = new ArrayList<>();
-        players.add(userPlayer);
-        for (Player player : players) {
-            player.registerObserver(this);
-        }
-        currentPlayerPos = new int[]{21, 6};
-        currentPlayer2Pos = new int[]{5, 19};
-        currentPlayer3Pos = new int[]{13, 19};
+    public ClueBoard(ArrayList<Player> players) {
+        this.players=players;
+        this.userPlayer = players.get(0);
+        userPlayer.registerObserver(this);
+
+        //currentPlayerPos = new int[]{21, 6};
+        //currentPlayer2Pos = new int[]{5, 19};
+        //currentPlayer3Pos = new int[]{13, 19};
         setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
         setBackground(BACKGROUND_COLOR);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
@@ -69,20 +70,27 @@ public class ClueBoard extends JPanel implements GameObserver {
                 tiles[row][col] = tile;
             }
         }
-        playerPanel = tiles[currentPlayerPos[0]][currentPlayerPos[1]];
-        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
-                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-        playerPanel.add(new JLabel(playerIcon));
 
-        computer1Panel = tiles[currentPlayer2Pos[0]][currentPlayer2Pos[1]];
-        ImageIcon player2Icon = new ImageIcon(new ImageIcon("resources/green.png")
-                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-        computer1Panel.add(new JLabel(player2Icon));
+        addPlayerPanels();
+    }
 
-        computer2Panel = tiles[currentPlayer3Pos[0]][currentPlayer3Pos[1]];
-        ImageIcon player3Icon = new ImageIcon(new ImageIcon("resources/peacock.png")
+    public void addPlayerPanels(){
+        playerPanels = new ArrayList<JPanel>();
+        for (Player player : players) {
+            System.out.println(player.getName());
+            int[] pos = player.getPos();
+            JPanel panel = tiles[pos[0]][pos[1]];
+            System.out.println(pos[0]+", "+pos[1]);
+            
+            ImageIcon playerIcon = new ImageIcon(new ImageIcon(player.getImage())
                 .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-        computer2Panel.add(new JLabel(player3Icon));
+
+            panel.add(new JLabel(playerIcon));
+            playerPanels.add(panel);
+        }
+
+        
+
     }
 
 
@@ -145,20 +153,23 @@ public class ClueBoard extends JPanel implements GameObserver {
     }
 
     public void initializeBoard() {
+        
         JFrame frame = new JFrame("Clue Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize((TILE_SIZE * NUM_COLS + 2) + 500, TILE_SIZE * NUM_ROWS + 2);
         frame.setResizable(false);
 
-        // JPanel to hold both the ClueBoard and the player image
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.add(this, BorderLayout.CENTER);
 
+        // JPanel to hold both the ClueBoard and the player image
+        
+
         // Load the player image
-        String userImage = userPlayer.getImage();
-        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userImage).getImage().getScaledInstance(150,350,java.awt.Image.SCALE_SMOOTH ));
-        JLabel playerLabel = new JLabel(playerIcon);
-        contentPane.add(playerLabel, BorderLayout.EAST);
+        //String userImage = userPlayer.getImage();
+        //ImageIcon playerIcon = new ImageIcon(new ImageIcon(userImage).getImage().getScaledInstance(150,350,java.awt.Image.SCALE_SMOOTH ));
+        //JLabel playerLabel = new JLabel(playerIcon);
+        //contentPane.add(playerLabel, BorderLayout.EAST);
 
         // JPanel to hold the buttons for making accusations and guesses
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
@@ -264,6 +275,8 @@ public class ClueBoard extends JPanel implements GameObserver {
     }
     public void movePlayerToken(int rollCount) {
         // Calculate the new position based on the roll count
+
+        ArrayList<int[]> possiblePos = generatePossibleMoves(currentPlayer2Pos, rollCount);
         int[] newPos = new int[]{
                 currentPlayerPos[0] - (rollCount),
                 currentPlayerPos[1]
@@ -335,6 +348,15 @@ public class ClueBoard extends JPanel implements GameObserver {
         computer2Panel.add(new JLabel(playerIcon));
         computer2Panel.revalidate();
         computer2Panel.repaint();
+    }
+
+    public ArrayList<int[]> generatePossibleMoves(int[] currentPos, int roll){
+        ArrayList<int[]> possibleMoves = new ArrayList<int[]>();
+
+
+
+        return possibleMoves;
+
     }
 
 }

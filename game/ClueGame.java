@@ -2,11 +2,14 @@ package game;
 
 import game.CardDeck;
 import game.Weapon;
+import main.ClueGUI;
 import player.AIPlayer;
 import player.Player;
+import player.UserPlayer;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 public class ClueGame {
     CardDeck cards;
     ArrayList<Player> players;
@@ -15,10 +18,13 @@ public class ClueGame {
     ArrayList<Weapon> weapons;
     Envelope finalEnvelope;
     Player Winner;
+    ClueBoard board;
+    int numPlayers;
 
     // There are separate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
-    public void playGame(){
-        setupGame();
+    public void playGame(int numPlayers, String userPlayer){
+        this.numPlayers = numPlayers;
+        setupGame(userPlayer);
         int i = 1; //Temporary, until the game can decide a winner
         System.out.println("\n -------Making guesses------");
         while (Winner == null){
@@ -31,14 +37,15 @@ public class ClueGame {
         }
     }
 
-    public void setupGame(){
+    public void setupGame(String UserPlayer){
         this.cards = CardDeck.getInstance();
         addSuspects();
         addWeapons();
         addRooms();
-        addPlayers();
+        addPlayers(UserPlayer);
         this.finalEnvelope = Envelope.getInstance(cards);
         dealCards();
+        addBoard();
     }
 
     public void addSuspects(){
@@ -81,14 +88,29 @@ public class ClueGame {
         }
     }
 
-    public void addPlayers(){
-        //TODO add players
-        players = new ArrayList<Player>();
-        players.add(new AIPlayer("Test1"));
-        players.add(new AIPlayer("Test 2"));
-        players.add(new AIPlayer("Test 3"));
-        players.add(new AIPlayer("Test 4"));
+    public void addPlayers(String userPlayer){
+        this.players = new ArrayList<Player>();
+        players.add(new UserPlayer(userPlayer));
+        addAIPlayers(userPlayer);
+    }
 
+    public void addAIPlayers(String userName){
+        ArrayList<String> possiblePlayers = new ArrayList<String>(suspects);
+        possiblePlayers.remove(userName);
+        while (players.size() < this.numPlayers){
+            Random n = new Random();
+            int characterInd = n.nextInt(possiblePlayers.size());
+            String name = possiblePlayers.get(characterInd);
+            players.add(new AIPlayer(name));
+            possiblePlayers.remove(characterInd);
+        }
+
+        //Testing
+        System.out.println(numPlayers);
+
+        for (Player player : players){
+            System.out.println(player.getName());
+        }
     }
 
     public void dealCards(){
@@ -102,6 +124,11 @@ public class ClueGame {
                 player.getSheet().removeItem(cards.get(i));
             }
         }
+    }
+
+    public void addBoard(){
+        ClueBoard board = new ClueBoard(players);
+        board.initializeBoard();
     }
 
     public void playersTakeTurns(){
