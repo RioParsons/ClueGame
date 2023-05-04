@@ -1,5 +1,6 @@
 package player;
 
+import game.ClueBoard;
 import game.GameObserver;
 import game.GuessSheet;
 
@@ -129,5 +130,6 @@ public abstract class Player {
     public abstract void move(int spaces);
     public abstract ArrayList<String> makeSuggestion();
     public abstract String proveWrong(ArrayList<String> guesses);
+    public abstract void pickMove(ArrayList<int[]> moves, ClueBoard board);
     
 }

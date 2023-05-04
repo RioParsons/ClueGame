@@ -3,6 +3,8 @@ package player;
 import java.util.ArrayList;
 import java.util.Random;
 
+import game.ClueBoard;
+
 /* Strategy Pattern - UserPlayer */
 public class UserPlayer extends Player {
 
@@ -23,16 +25,17 @@ public class UserPlayer extends Player {
         return name;
     }
 
+    public void pickMove(ArrayList<int[]> moves, ClueBoard board){
+        board.showPossibleMoves(moves);
+    }
+
     
 
     public void move(int spaces){
 
         notifyObservers(name + " moved " + spaces + " spaces.");
 
-        if (madeAccusation == false){
-            int n = rollDice();
-            //TODO move
-        }
+
     }
 
     public void makeSuggestion(ArrayList<Player> players){

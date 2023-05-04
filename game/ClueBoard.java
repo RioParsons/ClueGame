@@ -281,8 +281,8 @@ public class ClueBoard extends JPanel implements GameObserver {
 
     public void userMove(int roll){
         ArrayList<int[]> possibleMoves = generatePossibleMoves(userPlayer.getPos(), roll);
-
-        showPossibleMoves(possibleMoves);
+        players.get(0).pickMove(possibleMoves, this);
+        //showPossibleMoves(possibleMoves);
     }
 
     public ArrayList<int[]> generatePossibleMoves(int[] pos, int roll){
@@ -395,9 +395,19 @@ public class ClueBoard extends JPanel implements GameObserver {
 
     }
 
-    public void movePlayerToken(int[] pos){
+    public void movePlayerToken(Player p){
+        //Find Player index
+        int ind = -1;
+        for (int i = 0; i < players.size(); i++){
+            if (p.getName().equals(players.get(i).getName())){
+                ind = i;  
+            }
+        }
+
+        int pos[] = p.getPos();
+
         // Remove the old player token
-        JPanel playerPanel = playerPanels.get(0);
+        JPanel playerPanel = playerPanels.get(ind);
         Component[] components = playerPanel.getComponents();
         for (Component c : components) {
             playerPanel.remove(c);
@@ -406,14 +416,14 @@ public class ClueBoard extends JPanel implements GameObserver {
         playerPanel.repaint();
         playerPanel = tiles[pos[0]][pos[1]];
 
-        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
+        ImageIcon playerIcon = new ImageIcon(new ImageIcon(p.getImage())
             .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
         playerPanel = tiles[pos[0]][pos[1]];
         playerPanel.add(new JLabel(playerIcon));
         playerPanel.revalidate();
         playerPanel.repaint();
 
-        playerPanels.set(0, playerPanel);
+        playerPanels.set(ind, playerPanel);
 
 
     }

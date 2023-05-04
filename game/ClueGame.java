@@ -152,7 +152,10 @@ public class ClueGame {
     }
 
     public void AITurn(Player p){
-        p.move(2);
+
+        ArrayList<int[]> moves = board.generatePossibleMoves(p.getPos(), rollDice());
+        p.pickMove(moves, board);
+        board.movePlayerToken(p);
         ArrayList<String> guesses = p.makeSuggestion();
         System.out.println(p.getName()); //Temporary, testing
         System.out.println(guesses);
@@ -190,8 +193,13 @@ public class ClueGame {
         }
     }
 
-    public void endUserTurn(){
-        latch.countDown();
-        userTurn=false;
+
+    public int rollDice(){
+        Random n = new Random();
+        int firstDie = n.nextInt(6)+ 1;
+        int secondDie = n.nextInt(6) + 1;
+        int roll = firstDie + secondDie;
+        return roll;
     }
+        
 }

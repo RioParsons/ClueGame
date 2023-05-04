@@ -3,6 +3,8 @@ package player;
 import java.util.ArrayList;
 import java.util.Random;
 
+import game.ClueBoard;
+
 /* Strategy pattern - AI Player */
 public class AIPlayer extends Player {
 
@@ -21,6 +23,12 @@ public class AIPlayer extends Player {
 
     public String getName(){
         return name;
+    }
+    
+    public void pickMove(ArrayList<int[]> moves, ClueBoard board){
+        Random n = new Random();
+        int ind = n.nextInt(moves.size());
+        position = moves.get(ind);
     }
 
     public void move(int spaces){
