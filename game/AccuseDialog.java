@@ -16,8 +16,8 @@ public class AccuseDialog extends JDialog {
         super(parent, "Make a Guess", true);
 
         // Initialize components
-        personCombo = new JComboBox<>(new String[] {"Miss Scarlet", "Professor Plum", "Reverend Green", "Colonel Mustard", "Mrs. Peacock", "Dr. Orchid"});
-        weaponCombo = new JComboBox<>(new String[] {"Candlestick", "Knife", "Lead Pipe", "Revolver", "Rope", "Wrench"});
+        personCombo = new JComboBox<>(new String[] {"Miss Scarlett", "Professor Plum", "Reverend Green", "Colonel Mustard", "Mrs Peacock", "Dr Orchid"});
+        weaponCombo = new JComboBox<>(new String[] {"Candlestick", "Knife", "Lead Piping", "Revolver", "Rope", "Wrench"});
         roomCombo = new JComboBox<>(new String[] {"Kitchen", "Library", "Study", "Dining Room", "Lounge", "Hall", "Billiard Room", "Conservatory", "Ballroom"});
         okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");

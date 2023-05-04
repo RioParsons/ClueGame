@@ -24,6 +24,12 @@ public class ClueBoard extends JPanel implements GameObserver {
 
     private JPanel[][] tiles;
     private JPanel playerPanel;
+    private JPanel computer1Panel;
+    private JPanel computer2Panel;
+
+    private int[] currentPlayerPos;
+    private int[] currentPlayer2Pos;
+    private int[] currentPlayer3Pos;
 
     public ClueBoard(UserPlayer userPlayer) {
         this.userPlayer = userPlayer;
@@ -32,6 +38,9 @@ public class ClueBoard extends JPanel implements GameObserver {
         for (Player player : players) {
             player.registerObserver(this);
         }
+        currentPlayerPos = new int[]{21, 6};
+        currentPlayer2Pos = new int[]{5, 19};
+        currentPlayer3Pos = new int[]{13, 19};
         setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
         setBackground(BACKGROUND_COLOR);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
@@ -60,6 +69,20 @@ public class ClueBoard extends JPanel implements GameObserver {
                 tiles[row][col] = tile;
             }
         }
+        playerPanel = tiles[currentPlayerPos[0]][currentPlayerPos[1]];
+        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
+                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+        playerPanel.add(new JLabel(playerIcon));
+
+        computer1Panel = tiles[currentPlayer2Pos[0]][currentPlayer2Pos[1]];
+        ImageIcon player2Icon = new ImageIcon(new ImageIcon("resources/green.png")
+                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+        computer1Panel.add(new JLabel(player2Icon));
+
+        computer2Panel = tiles[currentPlayer3Pos[0]][currentPlayer3Pos[1]];
+        ImageIcon player3Icon = new ImageIcon(new ImageIcon("resources/peacock.png")
+                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+        computer2Panel.add(new JLabel(player3Icon));
     }
 
 
@@ -188,10 +211,22 @@ public class ClueBoard extends JPanel implements GameObserver {
                 diceLabel1.repaint();
                 diceIcon2.setImage(new ImageIcon("resources/Dice_" + dice2 + ".png").getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
                 diceLabel2.repaint();
+                movePlayerToken(dice1+dice2);
             }
         });
 
         dicePanel.add(rollDice);
+        JButton endTurn = new JButton("End Turn");
+        endTurn.setSize(150, 70);
+        endTurn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveAI1Token();
+                moveAI2Token();
+            }
+        });
+        dicePanel.add(endTurn);
+
         contentPane.add(dicePanel, BorderLayout.SOUTH);
 
         //JPanel to hold the card icons
@@ -226,6 +261,80 @@ public class ClueBoard extends JPanel implements GameObserver {
     public void makeAccusation() {
         AccuseDialog dialog = new AccuseDialog((JFrame) SwingUtilities.getWindowAncestor(this));
         dialog.setVisible(true);
+    }
+    public void movePlayerToken(int rollCount) {
+        // Calculate the new position based on the roll count
+        int[] newPos = new int[]{
+                currentPlayerPos[0] - (rollCount),
+                currentPlayerPos[1]
+        };
+            currentPlayerPos = newPos;
+            // Remove the old player token
+            Component[] components = playerPanel.getComponents();
+            for (Component c : components) {
+                playerPanel.remove(c);
+            }
+        playerPanel.revalidate();
+        playerPanel.repaint();
+
+            playerPanel = tiles[currentPlayerPos[0]][currentPlayerPos[1]];
+            // Add the new player token
+            ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
+                    .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+            playerPanel = tiles[currentPlayerPos[0]][currentPlayerPos[1]];
+            playerPanel.add(new JLabel(playerIcon));
+            playerPanel.revalidate();
+            playerPanel.repaint();
+    }
+
+    public void moveAI1Token() {
+        // Calculate the new position based on the roll count
+        int[] newPos = new int[]{
+                currentPlayer2Pos[0] ,
+                currentPlayer2Pos[1] - (int) (Math.random() * 12) + 1
+        };
+        currentPlayer2Pos = newPos;
+        // Remove the old player token
+        Component[] components = computer1Panel.getComponents();
+        for (Component c : components) {
+            computer1Panel.remove(c);
+        }
+        computer1Panel.revalidate();
+        computer1Panel.repaint();
+
+        computer1Panel = tiles[currentPlayer2Pos[0]][currentPlayer2Pos[1]];
+        // Add the new player token
+        ImageIcon playerIcon = new ImageIcon(new ImageIcon("resources/green.png")
+                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+        computer1Panel = tiles[currentPlayer2Pos[0]][currentPlayer2Pos[1]];
+        computer1Panel.add(new JLabel(playerIcon));
+        computer1Panel.revalidate();
+        computer1Panel.repaint();
+    }
+
+    public void moveAI2Token() {
+        // Calculate the new position based on the roll count
+        int[] newPos = new int[]{
+                currentPlayer3Pos[0] ,
+                currentPlayer3Pos[1] - (int) (Math.random() * 12) + 1
+        };
+        currentPlayer3Pos = newPos;
+        // Remove the old player token
+        Component[] components = computer2Panel.getComponents();
+        for (Component c : components) {
+            computer2Panel.remove(c);
+        }
+        computer2Panel.revalidate();
+        computer2Panel.repaint();
+
+        computer2Panel = tiles[currentPlayer3Pos[0]][currentPlayer3Pos[1]];
+        // Add the new player token
+        ImageIcon playerIcon = new ImageIcon(new ImageIcon("resources/peacock.png")
+                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+        computer2Panel = tiles[currentPlayer3Pos[0]][currentPlayer3Pos[1]];
+        computer2Panel.add(new JLabel(playerIcon));
+        computer2Panel.revalidate();
+        computer2Panel.repaint();
     }
 
 }
