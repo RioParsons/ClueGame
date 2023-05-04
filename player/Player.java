@@ -122,6 +122,10 @@ public abstract class Player {
         }
     }
 
+    public void setPosition(int[] pos){
+        this.position=pos;
+    }
+
     public abstract void move(int spaces);
     public abstract ArrayList<String> makeSuggestion();
     public abstract String proveWrong(ArrayList<String> guesses);

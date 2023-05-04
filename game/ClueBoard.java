@@ -5,6 +5,8 @@ import player.Player;
 import player.UserPlayer;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,20 +21,23 @@ public class ClueBoard extends JPanel implements GameObserver {
     private static final Color BORDER_COLOR = new Color(0, 0, 0);
     private static final Color ROOM_COLOR = new Color(17, 147, 194);
     private static final Color HALLWAY_COLOR = new Color(252, 174, 61);
+    private static final Color POSSIBLE_MOVE_COLOR = new Color(144, 238, 144);
     Player userPlayer;
     private ArrayList<Player> players;
     private int numPlayers;
 
+    JButton rollDice;
+    JButton endTurn;
+    JButton accuseButton;
+    JButton guessButton;
+
+    JPanel buttonPanel;
+    JPanel dicePanel;
+    JPanel contentPane;
+
     ArrayList<JPanel> playerPanels;
 
     private JPanel[][] tiles;
-    private JPanel playerPanel;
-    private JPanel computer1Panel;
-    private JPanel computer2Panel;
-
-    private int[] currentPlayerPos;
-    private int[] currentPlayer2Pos;
-    private int[] currentPlayer3Pos;
 
     public ClueBoard(ArrayList<Player> players) {
         this.players=players;
@@ -77,10 +82,8 @@ public class ClueBoard extends JPanel implements GameObserver {
     public void addPlayerPanels(){
         playerPanels = new ArrayList<JPanel>();
         for (Player player : players) {
-            System.out.println(player.getName());
             int[] pos = player.getPos();
             JPanel panel = tiles[pos[0]][pos[1]];
-            System.out.println(pos[0]+", "+pos[1]);
             
             ImageIcon playerIcon = new ImageIcon(new ImageIcon(player.getImage())
                 .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
@@ -88,9 +91,6 @@ public class ClueBoard extends JPanel implements GameObserver {
             panel.add(new JLabel(playerIcon));
             playerPanels.add(panel);
         }
-
-        
-
     }
 
 
@@ -159,24 +159,16 @@ public class ClueBoard extends JPanel implements GameObserver {
         frame.setSize((TILE_SIZE * NUM_COLS + 2) + 500, TILE_SIZE * NUM_ROWS + 2);
         frame.setResizable(false);
 
-        JPanel contentPane = new JPanel(new BorderLayout());
-        contentPane.add(this, BorderLayout.CENTER);
-
         // JPanel to hold both the ClueBoard and the player image
+        this.contentPane = new JPanel(new BorderLayout());
+        contentPane.add(this, BorderLayout.CENTER);
         
-
-        // Load the player image
-        //String userImage = userPlayer.getImage();
-        //ImageIcon playerIcon = new ImageIcon(new ImageIcon(userImage).getImage().getScaledInstance(150,350,java.awt.Image.SCALE_SMOOTH ));
-        //JLabel playerLabel = new JLabel(playerIcon);
-        //contentPane.add(playerLabel, BorderLayout.EAST);
-
         // JPanel to hold the buttons for making accusations and guesses
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
+        this.buttonPanel = new JPanel(new GridLayout(2, 1));
         buttonPanel.setPreferredSize(new Dimension(100, 100));
 
         // JButton to make an accusation
-        JButton accuseButton = new JButton("Make Accusation");
+        this.accuseButton = new JButton("Make Accusation");
         accuseButton.setSize(150, 70);
         accuseButton.addActionListener(new ActionListener() {
             @Override
@@ -187,7 +179,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         buttonPanel.add(accuseButton);
 
         // JButton to make a guess
-        JButton guessButton = new JButton("Make Guess");
+        this.guessButton = new JButton("Make Guess");
         guessButton.setSize(150, 100);
         guessButton.addActionListener(new ActionListener() {
             @Override
@@ -199,7 +191,7 @@ public class ClueBoard extends JPanel implements GameObserver {
 
         contentPane.add(buttonPanel, BorderLayout.NORTH);
 
-        JPanel dicePanel = new JPanel();
+        this.dicePanel = new JPanel();
         dicePanel.setPreferredSize(new Dimension(200, 100));
         ImageIcon diceIcon1 = new ImageIcon(new ImageIcon("resources/Dice_3.png").getImage().getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH ));
         JLabel diceLabel1 = new JLabel(diceIcon1);
@@ -207,7 +199,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         ImageIcon diceIcon2 = new ImageIcon(new ImageIcon("resources/Dice_5.png").getImage().getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH ));
         JLabel diceLabel2 = new JLabel(diceIcon2);
         dicePanel.add(diceLabel2);
-        JButton rollDice = new JButton("Roll Dice");
+        this.rollDice = new JButton("Roll Dice");
         rollDice.setSize(150, 70);
         // rollDice button
         rollDice.addActionListener(new ActionListener() {
@@ -222,18 +214,24 @@ public class ClueBoard extends JPanel implements GameObserver {
                 diceLabel1.repaint();
                 diceIcon2.setImage(new ImageIcon("resources/Dice_" + dice2 + ".png").getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
                 diceLabel2.repaint();
-                movePlayerToken(dice1+dice2);
+
+                rollDice.setEnabled(false); //So that user can only roll dice once
+
+                userMove(dice1 + dice2);
+
+                //movePlayerToken(dice1+dice2);
             }
         });
 
         dicePanel.add(rollDice);
-        JButton endTurn = new JButton("End Turn");
+        this.endTurn = new JButton("End Turn");
         endTurn.setSize(150, 70);
+        endTurn.setEnabled(false);
         endTurn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                moveAI1Token();
-                moveAI2Token();
+                //moveAI1Token();
+                //moveAI2Token();
             }
         });
         dicePanel.add(endTurn);
@@ -273,90 +271,121 @@ public class ClueBoard extends JPanel implements GameObserver {
         AccuseDialog dialog = new AccuseDialog((JFrame) SwingUtilities.getWindowAncestor(this));
         dialog.setVisible(true);
     }
-    public void movePlayerToken(int rollCount) {
-        // Calculate the new position based on the roll count
 
-        ArrayList<int[]> possiblePos = generatePossibleMoves(currentPlayer2Pos, rollCount);
-        int[] newPos = new int[]{
-                currentPlayerPos[0] - (rollCount),
-                currentPlayerPos[1]
-        };
-            currentPlayerPos = newPos;
-            // Remove the old player token
-            Component[] components = playerPanel.getComponents();
-            for (Component c : components) {
-                playerPanel.remove(c);
-            }
-        playerPanel.revalidate();
-        playerPanel.repaint();
-
-            playerPanel = tiles[currentPlayerPos[0]][currentPlayerPos[1]];
-            // Add the new player token
-            ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
-                    .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-            playerPanel = tiles[currentPlayerPos[0]][currentPlayerPos[1]];
-            playerPanel.add(new JLabel(playerIcon));
-            playerPanel.revalidate();
-            playerPanel.repaint();
+    public void renderUserTurn(Player p){
+        dicePanel.setEnabled(true);
+        buttonPanel.setEnabled(true);
     }
 
-    public void moveAI1Token() {
-        // Calculate the new position based on the roll count
-        int[] newPos = new int[]{
-                currentPlayer2Pos[0] ,
-                currentPlayer2Pos[1] - (int) (Math.random() * 12) + 1
-        };
-        currentPlayer2Pos = newPos;
-        // Remove the old player token
-        Component[] components = computer1Panel.getComponents();
-        for (Component c : components) {
-            computer1Panel.remove(c);
-        }
-        computer1Panel.revalidate();
-        computer1Panel.repaint();
+    public void userMove(int roll){
+        ArrayList<int[]> possibleMoves = generatePossibleMoves(userPlayer.getPos(), roll);
 
-        computer1Panel = tiles[currentPlayer2Pos[0]][currentPlayer2Pos[1]];
-        // Add the new player token
-        ImageIcon playerIcon = new ImageIcon(new ImageIcon("resources/green.png")
-                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-        computer1Panel = tiles[currentPlayer2Pos[0]][currentPlayer2Pos[1]];
-        computer1Panel.add(new JLabel(playerIcon));
-        computer1Panel.revalidate();
-        computer1Panel.repaint();
+        showPossibleMoves(possibleMoves);
     }
 
-    public void moveAI2Token() {
-        // Calculate the new position based on the roll count
-        int[] newPos = new int[]{
-                currentPlayer3Pos[0] ,
-                currentPlayer3Pos[1] - (int) (Math.random() * 12) + 1
-        };
-        currentPlayer3Pos = newPos;
-        // Remove the old player token
-        Component[] components = computer2Panel.getComponents();
-        for (Component c : components) {
-            computer2Panel.remove(c);
-        }
-        computer2Panel.revalidate();
-        computer2Panel.repaint();
-
-        computer2Panel = tiles[currentPlayer3Pos[0]][currentPlayer3Pos[1]];
-        // Add the new player token
-        ImageIcon playerIcon = new ImageIcon(new ImageIcon("resources/peacock.png")
-                .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-        computer2Panel = tiles[currentPlayer3Pos[0]][currentPlayer3Pos[1]];
-        computer2Panel.add(new JLabel(playerIcon));
-        computer2Panel.revalidate();
-        computer2Panel.repaint();
-    }
-
-    public ArrayList<int[]> generatePossibleMoves(int[] currentPos, int roll){
+    public ArrayList<int[]> generatePossibleMoves(int[] pos, int roll){
         ArrayList<int[]> possibleMoves = new ArrayList<int[]>();
+        int j = roll;
 
+        int current_row = pos[0];
+        int current_col = pos[1];
 
+        for (int i = 0; i < roll + 1; i++){
+            int[] move1 = new int[]{current_row + i, current_col + j};
+            int[] move2 = new int[]{current_row + i, current_col - j};
+            int[] move3 = new int[]{current_row - i, current_col + j};
+            int[] move4 = new int[]{current_row - i, current_col - j};
+
+            possibleMoves.add(move1);
+            possibleMoves.add(move2);
+            possibleMoves.add(move3);
+            possibleMoves.add(move4);
+            j--;
+        }
+
+        possibleMoves = validateMoves(possibleMoves);
+        return possibleMoves;
+
+    }
+
+    public ArrayList<int[]> validateMoves(ArrayList<int[]> potentialMoves){
+        ArrayList<int[]> possibleMoves = new ArrayList<int[]>();
+        for (int[] i: potentialMoves){
+            if (i[0] < NUM_ROWS & i[0] > -1 & i[1] < NUM_COLS & i[1] > -1 ){
+                possibleMoves.add(i);
+            }
+        }
 
         return possibleMoves;
 
+    }
+
+    public void showPossibleMoves(ArrayList<int[]> possibleMoves){
+
+        ArrayList<JButton> buttons = new ArrayList<JButton>();
+        ArrayList<JPanel> panels = new ArrayList<JPanel>();
+        
+        for (int[] i : possibleMoves){
+            
+            JPanel panel = tiles[i[0]][i[1]];
+            panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));;
+            panel.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
+            
+            JButton posMove = new JButton();
+            posMove.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
+            posMove.setMargin(new Insets(0,0,0,0));
+            posMove.setBorder(BorderFactory.createEmptyBorder());
+            //posMove.setBounds(0, 0, TILE_SIZE, TILE_SIZE);
+            posMove.setBackground(POSSIBLE_MOVE_COLOR);
+            //posMove.setLocation(i[0], i[1]);
+
+            panel.add(posMove);
+            panel.revalidate();
+            panel.repaint();
+            buttons.add(posMove);
+            panels.add(panel);
+
+            //highlightTile(i[0], i[1], POSSIBLE_MOVE_COLOR);
+            posMove.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int[] pos = new int[]{i[0], i[1]};
+                    userPlayer.setPosition(pos);
+
+                    deleteButtons(panels, buttons);
+                    moveUserToken(userPlayer.getPos());
+                    endTurn.setEnabled(true);
+
+                }
+            });
+        }
+    }
+
+    public void deleteButtons(ArrayList<JPanel> panels, ArrayList<JButton> buttons){
+        for (int j = 0; j < buttons.size(); j++){
+            panels.get(j).remove(buttons.get(j));
+            panels.get(j).revalidate();
+            panels.get(j).repaint();
+        }
+    }
+
+    public void moveUserToken(int[] pos){
+        // Remove the old player token
+        JPanel playerPanel = playerPanels.get(0);
+        Component[] components = playerPanel.getComponents();
+        for (Component c : components) {
+            playerPanel.remove(c);
+        }
+        playerPanel.revalidate();
+        playerPanel.repaint();
+        playerPanel = tiles[pos[0]][pos[1]];
+
+        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
+            .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
+            playerPanel = tiles[pos[0]][pos[1]];
+            playerPanel.add(new JLabel(playerIcon));
+            playerPanel.revalidate();
+            playerPanel.repaint();
     }
 
 }

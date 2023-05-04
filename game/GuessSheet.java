@@ -26,12 +26,12 @@ public class GuessSheet {
     public void addRooms(){
         this.rooms = new ArrayList<String>();
         rooms.add("Kitchen");
-        rooms.add("Dining game.Room");
+        rooms.add("Dining Room");
         rooms.add("Lounge");
         rooms.add("Hall");
         rooms.add("Study");
         rooms.add("Library");
-        rooms.add("Billiard game.Room");
+        rooms.add("Billiard Room");
         rooms.add("Conservatory");
         rooms.add("Ballroom");
     }
@@ -53,8 +53,7 @@ public class GuessSheet {
                 found = true;
                 weapons.remove(name);
                 break;
-            }
-            
+            } 
         }
 
         for (String room : rooms){
@@ -74,7 +73,7 @@ public class GuessSheet {
         }
 
         if (found == false){
-            System.out.println("Somethign went wrong with removing options");
+            System.out.println("Something went wrong with removing options in guessSheet");
         }
 
     }

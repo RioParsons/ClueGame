@@ -98,7 +98,7 @@ public class CardDeck {
         }
 
         //Testing
-        System.out.println("---player.Player's cards-----");
+        System.out.println("---Player's cards-----");
         for(Player player: players){
             System.out.println(player.getName()+"'s cards: ");
             System.out.println(player.getCards());

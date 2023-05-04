@@ -104,13 +104,6 @@ public class ClueGame {
             players.add(new AIPlayer(name));
             possiblePlayers.remove(characterInd);
         }
-
-        //Testing
-        System.out.println(numPlayers);
-
-        for (Player player : players){
-            System.out.println(player.getName());
-        }
     }
 
     public void dealCards(){
@@ -127,7 +120,7 @@ public class ClueGame {
     }
 
     public void addBoard(){
-        ClueBoard board = new ClueBoard(players);
+        this.board = new ClueBoard(players);
         board.initializeBoard();
     }
 
@@ -136,12 +129,33 @@ public class ClueGame {
             if (Winner != null){
                 break;
             }
-            p.move(0);
-            ArrayList<String> guesses = p.makeSuggestion();
-            System.out.println(p.getName()); //Temporary, testing
-            System.out.println(guesses);
-            playersProveWrong(guesses, p);
+
+            if (p.getType().equals("User")){
+                userTurn(p);
+            } else if (p.getType().equals("AI")){
+                AITurn(p);
+            }
         }
+    }
+
+    public void userTurn(Player p){
+        boolean userTurn = true;
+        board.renderUserTurn(p);
+        while(userTurn == false){
+            try {
+               Thread.sleep(200);
+            } catch(InterruptedException e) {
+            }
+        }
+    }
+
+    public void AITurn(Player p){
+        p.move(2);
+        ArrayList<String> guesses = p.makeSuggestion();
+        System.out.println(p.getName()); //Temporary, testing
+        System.out.println(guesses);
+        playersProveWrong(guesses, p);
+
     }
 
     public void playersProveWrong(ArrayList<String> guesses, Player p){
