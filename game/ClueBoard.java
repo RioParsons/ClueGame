@@ -78,7 +78,6 @@ public class ClueBoard extends JPanel implements GameObserver {
                 } else {
                     tile.setBackground(HALLWAY_COLOR);
                 }
-
                 add(tile);
                 tiles[row][col] = tile;
             }
@@ -382,6 +381,7 @@ public class ClueBoard extends JPanel implements GameObserver {
             JPanel panel = tiles[i[0]][i[1]];
             panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));;
             panel.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
+            panel.setBackground(null);
             
             JButton posMove = new JButton();
             posMove.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
@@ -406,6 +406,26 @@ public class ClueBoard extends JPanel implements GameObserver {
 
                     deleteButtons(panels, buttons);
                     movePlayerToken(userPlayer);
+
+                    for (int[] m : possibleMoves) {
+                        int row = m[0];
+                        int col = m[1];
+                        // Set color based on tile type
+                        if (isRoomTile(row, col)) {
+                            tiles[row][col].setBackground(ROOM_COLOR);
+                            // Add label for room
+                            if (isRoomTitle(row, col)) {
+                                JLabel label = new JLabel(getRoomName(row, col));
+                                label.setForeground(Color.WHITE);
+                                label.setFont(new Font("SansSerif", Font.PLAIN, 12));
+                                label.setHorizontalAlignment(JLabel.CENTER);
+                                tiles[row][col].add(label);
+                            }
+
+                        } else {
+                            tiles[row][col].setBackground(HALLWAY_COLOR);
+                        }
+                    }
 
                     if((isRoomTile(pos[0], pos[1])) != true){
                         guessButton.setEnabled(false);
