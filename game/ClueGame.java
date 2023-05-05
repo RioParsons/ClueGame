@@ -7,6 +7,7 @@ import player.AIPlayer;
 import player.Player;
 import player.UserPlayer;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -143,9 +144,9 @@ public class ClueGame {
         p.move(rollDice());
         ArrayList<String> guesses = p.makeSuggestion();
         if (guesses.get(0) == null){
-            System.out.println("They were not in a room so they did not make a guess");
+            JOptionPane.showMessageDialog(null, p.getName()+" were not in a room so they did not make a guess");
         } else {
-            System.out.println("They guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
+            JOptionPane.showMessageDialog(null,p.getName()+" guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
             playersProveWrong(guesses, p);
         }
     }
