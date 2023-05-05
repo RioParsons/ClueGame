@@ -3,7 +3,10 @@ package player;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 import game.ClueBoard;
+import game.Envelope;
 
 /* Strategy pattern - AI Player */
 public class AIPlayer extends Player {
@@ -96,8 +99,21 @@ public class AIPlayer extends Player {
         } else {
             Random n = new Random();
             int index = n.nextInt(possibleProof.size());
+            System.out.println(this.name + " has card " + possibleProof.get(index));
             return possibleProof.get(index);
+        }    
+    }
+
+    public boolean makeAccusation(String Person, String Weapon, String Room, Envelope envelope) {
+        boolean correct = envelope.checkAccusation(Person, Weapon, Room);
+        if(correct == true){
+            JOptionPane.showMessageDialog(null, this.name + " won the game! \n They correctly guessed that "+ Person + " killed Mr. John Boddy with a " + Weapon + " in the " + Room);
+        } else {
+            JOptionPane.showMessageDialog(null, this.name + " made a false accusation and lost.");
+            this.madeFalseAccusation();
         }
+
+        return correct;
         
     }
 }

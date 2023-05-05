@@ -69,6 +69,7 @@ public class GuessDialog extends JDialog {
 
         cancelButton.addActionListener(e -> {
             // Handle cancel button action
+            board.guessButton.setEnabled(true);
             dispose();
         });
     }

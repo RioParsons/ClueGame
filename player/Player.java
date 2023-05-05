@@ -1,6 +1,9 @@
 package player;
 
+import game.CardDeck;
 import game.ClueBoard;
+import game.ClueGame;
+import game.Envelope;
 import game.GameObserver;
 import game.GuessSheet;
 
@@ -111,14 +114,6 @@ public abstract class Player {
         madeAccusation=true;
     }
 
-    // public int rollDice(){
-    //     Random n = new Random();
-    //     int firstDie = n.nextInt(6)+ 1;
-    //     int secondDie = n.nextInt(6) + 1;
-    //     int roll = firstDie + secondDie;
-    //     return roll;
-    // }
-
     public void getStartPos(){
         if (this.name.equals("Miss Scarlett")){
             this.position = new int[]{21, 13};
@@ -133,6 +128,7 @@ public abstract class Player {
         } else if (this.name.equals("Dr. Orchid")){
             this.position=new int[]{21, 7};
         } else {
+            System.out.println("Could not find image for " + this.name);
             this.position = new int[]{-1, -1};
         }
     }
@@ -141,11 +137,9 @@ public abstract class Player {
         this.position=pos;
     }
 
-    //public abstract void move(int spaces);
     public abstract ArrayList<String> makeSuggestion();
-    //public abstract void makeSuggestion(String person, String weapon, String room);
     public abstract String proveWrong(ArrayList<String> guesses);
-    public abstract void pickMove(ArrayList<int[]> moves);
-    //public abstract void makeAccusation()
-    
+    public abstract void pickMove(ArrayList<int[]> moves);  
+    public abstract boolean makeAccusation(String Person, String Weapon, String Room, Envelope envelope);  
 }
+

@@ -144,7 +144,7 @@ public class ClueGame {
         p.move(rollDice());
         ArrayList<String> guesses = p.makeSuggestion();
         if (guesses.get(0) == null){
-            JOptionPane.showMessageDialog(null, p.getName()+" were not in a room so they did not make a guess");
+            JOptionPane.showMessageDialog(null, p.getName()+" was not in a room so they did not make a guess");
         } else {
             JOptionPane.showMessageDialog(null,p.getName()+" guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
             playersProveWrong(guesses, p);
@@ -168,13 +168,20 @@ public class ClueGame {
             i++;
         }
 
+        if(p.getType().equals("User")){
+            JOptionPane.showMessageDialog(null, playersProve.get(i-1).getName()+" showed you the " + proof +" card");
+        } else {
+            JOptionPane.showMessageDialog(null, p.getName() + " was proven wrong by " +playersProve.get(i-1).getName());
+
+        }
+
         // If no players could prove suggestion wrong, make accusation.
         if (proof == null){
             if (p.getType().equals("AI")){
-               //p.makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
-
+                if(p.makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), finalEnvelope)){
+                    Winner = p;
+                }
             }
-            makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
         } else {
             p.getSheet().removeItem(proof);
         }   
@@ -185,17 +192,17 @@ public class ClueGame {
         System.out.println("User takes their turn");
     }
 
-    public void makeAccusation(String Murderer, String Weapon, String Room, Player player){
-        boolean correct = finalEnvelope.checkAccusation(Murderer, Weapon, Room);
-        if (correct == true){
-            Winner = player;
-            System.out.println(player.getName() + " Won the game!");
-            System.out.println("They correctly guessed that "+ Murderer + " killed Mr. John Boddy with a " + Weapon + " in the " + Room );
-            //End Game
-        } else {
-            player.madeFalseAccusation();   
-        }
-    }
+    // public void makeAccusation(String Murderer, String Weapon, String Room, Player player){
+    //     boolean correct = finalEnvelope.checkAccusation(Murderer, Weapon, Room);
+    //     if (correct == true){
+    //         Winner = player;
+    //         System.out.println(player.getName() + " Won the game!");
+    //         System.out.println("They correctly guessed that "+ Murderer + " killed Mr. John Boddy with a " + Weapon + " in the " + Room );
+    //         //End Game
+    //     } else {
+    //         player.madeFalseAccusation();   
+    //     }
+    // }
 
     public int rollDice(){
         Random n = new Random();

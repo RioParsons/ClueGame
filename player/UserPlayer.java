@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import game.AccuseDialog;
+import game.CardDeck;
 import game.ClueBoard;
+import game.Envelope;
 import game.GuessDialog;
+import game.ProveWrongDialog;
 
 /* Strategy Pattern - UserPlayer */
 public class UserPlayer extends Player {
@@ -34,9 +39,28 @@ public class UserPlayer extends Player {
     }
 
     public String proveWrong(ArrayList<String> guesses){
-        //TODO proveWrong
-        String proof = null;
-        return proof;
+        //Find all cards that could prove guess wrong
+        ArrayList<String> possibleProof = new ArrayList<String>();
+        for (String card : cards){
+            for (String guess : guesses){
+                if (card.equals(guess)){
+                    possibleProof.add(card);
+                }
+            }
+        }
+
+        //Randomly select a card to use as proof
+        if(possibleProof.size() == 0){
+            JOptionPane.showMessageDialog(null, "You can't prove them wrong");
+            return null;
+        } else {
+            ProveWrongDialog dialog = new ProveWrongDialog((JFrame) SwingUtilities.getWindowAncestor(board), possibleProof);
+            dialog.setVisible(true);
+            while(dialog.getProof() == null){
+
+            }
+            return dialog.getProof();
+        }    
     }
 
     public ArrayList<String> makeSuggestion(){
@@ -44,6 +68,19 @@ public class UserPlayer extends Player {
         GuessDialog dialog = new GuessDialog((JFrame) SwingUtilities.getWindowAncestor(board), board);
         dialog.setVisible(true);
         return empty;
+    }
+
+    public boolean makeAccusation(String Person, String Weapon, String Room, Envelope envelope){
+        boolean correct = envelope.checkAccusation(Person, Weapon, Room);
+        if(correct == true){
+            JOptionPane.showMessageDialog(null, "Congratulations! You are the winner!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Wrong Accusation! You Lose!");
+            this.madeFalseAccusation();
+        }
+
+        return correct;
+
     }
     
 }

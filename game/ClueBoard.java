@@ -68,7 +68,7 @@ public class ClueBoard extends JPanel implements GameObserver {
                     tile.setBackground(ROOM_COLOR);
                     // Add label for room
                     if (isRoomTitle(row, col)){
-                        JLabel label = new JLabel(getRoomName(row, col));
+                        JLabel label = new JLabel(getRoomTitle(row, col));
                         label.setForeground(Color.WHITE);
                         label.setFont(new Font("SansSerif", Font.PLAIN, 12));
                         label.setHorizontalAlignment(JLabel.CENTER);
@@ -133,7 +133,7 @@ public class ClueBoard extends JPanel implements GameObserver {
             return true;
         } else if (row == 13 && col == 3) {
             return true;
-        } else if (row == 21 && col == 3) {
+        } else if (row == 20 && col == 3) {
             return true;
         } else if (row == 2 && col == 10) {
             return true;
@@ -153,6 +153,33 @@ public class ClueBoard extends JPanel implements GameObserver {
     }
 
     public String getRoomName(int row, int col) {
+        // Names of the rooms based on their positions
+        if (row < 4 && col < 6) {
+            return "Study";
+        } else if (row < 10 && row > 5 && col < 6) {
+            return "Library";
+        } else if (row > 11 && row < 16 && col < 6) {
+            return "Billiard Room";
+        } else if (row > 17 && col < 6) {
+            return "Conservatory";
+        } else if (row < 6 && col < 12 && col > 7) {
+            return "Hall";
+        } else if (row > 14 && col < 12 && col > 7) {
+            return "Ball";
+        } else if (row < 5 && col > 13) {
+            return "Lounge";
+        } else if (row > 6 && row < 13 && col > 13) {
+            return "Dining Room";
+        } else if (row > 14 && col > 13) {
+            return "Kitchen";
+        } else if (row < 13 && row > 7 && col < 12 && col > 7) {
+            return "Clue";
+        } else {
+            return null;
+        }
+    }
+
+    public String getRoomTitle(int row, int col) {
         // Names of the rooms based on their positions
         if (row < 4 && col < 6) {
             return "Study";
@@ -218,7 +245,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         accuseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                makeAccusation();
+                playerMakeAccusation();
             }
         });
         buttonPanel.add(accuseButton);
@@ -320,16 +347,6 @@ public class ClueBoard extends JPanel implements GameObserver {
         System.out.println(player.getName() + message);
     }
 
-    public void makeGuess() {
-        GuessDialog dialog = new GuessDialog((JFrame) SwingUtilities.getWindowAncestor(this), this);
-        dialog.setVisible(true);
-    }
-
-    public void makeAccusation() {
-        AccuseDialog dialog = new AccuseDialog((JFrame) SwingUtilities.getWindowAncestor(this));
-        dialog.setVisible(true);
-    }
-
     public void renderUserTurn(){
         guessButton.setEnabled(true);
         rollDice.setEnabled(true);
@@ -364,8 +381,15 @@ public class ClueBoard extends JPanel implements GameObserver {
     public ArrayList<int[]> validateMoves(ArrayList<int[]> potentialMoves){
         ArrayList<int[]> possibleMoves = new ArrayList<int[]>();
         for (int[] i: potentialMoves){
+            String room = getRoomName(i[0], i[1]);
             if (i[0] < NUM_ROWS & i[0] > -1 & i[1] < NUM_COLS & i[1] > -1 ){
-                possibleMoves.add(i);
+                if (isRoomTile(i[0], i[1])){
+                    if (room.equals("Clue") == false){
+                        possibleMoves.add(i);
+                    }  
+                } else {
+                    possibleMoves.add(i);
+                }
             }
         }
         return possibleMoves;
@@ -387,9 +411,7 @@ public class ClueBoard extends JPanel implements GameObserver {
             posMove.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
             posMove.setMargin(new Insets(0,0,0,0));
             posMove.setBorder(BorderFactory.createEmptyBorder());
-            //posMove.setBounds(0, 0, TILE_SIZE, TILE_SIZE);
             posMove.setBackground(POSSIBLE_MOVE_COLOR);
-            //posMove.setLocation(i[0], i[1]);
 
             panel.add(posMove);
             panel.revalidate();
@@ -397,7 +419,6 @@ public class ClueBoard extends JPanel implements GameObserver {
             buttons.add(posMove);
             panels.add(panel);
 
-            //highlightTile(i[0], i[1], POSSIBLE_MOVE_COLOR);
             posMove.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -478,6 +499,11 @@ public class ClueBoard extends JPanel implements GameObserver {
         for (Player p : players){
             p.setBoard(this);
         }
+    }
+
+    public void playerMakeAccusation(){
+        AccuseDialog dialog = new AccuseDialog((JFrame) SwingUtilities.getWindowAncestor(this), this, game);
+        dialog.setVisible(true);
     }
 
 }
