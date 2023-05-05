@@ -381,7 +381,7 @@ public class ClueBoard extends JPanel implements GameObserver {
             JPanel panel = tiles[i[0]][i[1]];
             panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));;
             panel.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
-            panel.setBackground(null);
+            panel.setBackground(POSSIBLE_MOVE_COLOR);
             
             JButton posMove = new JButton();
             posMove.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));

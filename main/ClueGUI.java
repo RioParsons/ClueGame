@@ -22,6 +22,7 @@ public class ClueGUI extends JFrame {
     private Command currentCommand;
 
     public ClueGUI() {
+        /* Set up commands to execute */
         currentCommand = new StartGameCommand(this);
         currentCommand.execute();
         setLocationRelativeTo(null);
@@ -42,6 +43,7 @@ public class ClueGUI extends JFrame {
         JButton startButton = new JButton("Start Game");
         startButton.setBounds(400, 450, 150, 50);
         startButton.addActionListener(e -> {
+            /* Set up commands to execute */
             currentCommand = new ShowSetupDialogCommand(this);
             currentCommand.execute();
         });
