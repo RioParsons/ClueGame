@@ -34,16 +34,23 @@ public class AIPlayer extends Player {
     public ArrayList<String> makeSuggestion(){
         // Compile suggestion
         ArrayList<String> guesses = new ArrayList<String>();
-        String suspect = findSuspect();
-        String weapon = findWeapon();
-        //String room = currentRoom();
-        String room = findRoom(); //Temporary, until movement is added in 
+        String room = currentRoom();
+        if (room == null){
+            guesses.add(null);
+            guesses.add(null);
+            guesses.add(null);
+        } else {
+            String suspect = findSuspect();
+            String weapon = findWeapon();
+            //String room = findRoom(); //Temporary, until movement is added in 
 
-        guesses.add(suspect);
-        guesses.add(weapon);
-        guesses.add(room);
+            guesses.add(suspect);
+            guesses.add(weapon);
+            guesses.add(room);
+        }
 
         return guesses;
+        
     }
 
     public String findSuspect(){
@@ -60,17 +67,15 @@ public class AIPlayer extends Player {
         return weapons.get(index);
     }
 
-    //Temporary
-    public String findRoom(){
-        Random n = new Random();
-        ArrayList<String> rooms = guessSheet.getRooms();
-        int index = n.nextInt(rooms.size());
-        return rooms.get(index);
-    }
-
     public String currentRoom(){
-        //TODO find current room
-        String room = null;
+        String room;
+        int[] pos = this.position;
+        if((board.isRoomTile(pos[0], pos[1])) == true){
+            room = board.getRoomName(pos[0], pos[1]);
+        } else {
+            room = null;
+        }
+
         return room;
     }
 

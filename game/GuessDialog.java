@@ -62,7 +62,8 @@ public class GuessDialog extends JDialog {
             guesses.add(getPerson());
             guesses.add(getWeapon());
             guesses.add(getRoom());
-            board.userMakeGuess(guesses);
+            System.out.println("They guessed: " + guesses.get(0) + ", " + guesses.get(1) + ", " + guesses.get(2));
+            board.game.playersProveWrong(guesses, player);
             dispose();
         });
 

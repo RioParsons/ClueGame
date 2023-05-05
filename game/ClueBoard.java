@@ -230,7 +230,7 @@ public class ClueBoard extends JPanel implements GameObserver {
             @Override
             public void actionPerformed(ActionEvent e) {
                 guessButton.setEnabled(false);
-                makeGuess();
+                userPlayer.makeSuggestion();
             }
         });
         buttonPanel.add(guessButton);
@@ -434,11 +434,6 @@ public class ClueBoard extends JPanel implements GameObserver {
         playerPanel.repaint();
 
         playerPanels.set(ind, playerPanel);
-    }
-
-    public void userMakeGuess(ArrayList<String> guesses){
-        System.out.println("They guessed: " + guesses.get(0) + ", " + guesses.get(1) + ", " + guesses.get(2));
-        game.playersProveWrong(guesses, userPlayer);
     }
 
     public void addBoardToPlayers(){

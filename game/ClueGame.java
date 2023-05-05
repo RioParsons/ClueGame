@@ -142,9 +142,12 @@ public class ClueGame {
 
         p.move(rollDice());
         ArrayList<String> guesses = p.makeSuggestion();
-
-        System.out.println("They guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
-        playersProveWrong(guesses, p);
+        if (guesses.get(0) == null){
+            System.out.println("They were not in a room so they did not make a guess");
+        } else {
+            System.out.println("They guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
+            playersProveWrong(guesses, p);
+        }
     }
 
     public void playersProveWrong(ArrayList<String> guesses, Player p){

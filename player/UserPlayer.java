@@ -3,7 +3,11 @@ package player;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import game.ClueBoard;
+import game.GuessDialog;
 
 /* Strategy Pattern - UserPlayer */
 public class UserPlayer extends Player {
@@ -36,9 +40,10 @@ public class UserPlayer extends Player {
     }
 
     public ArrayList<String> makeSuggestion(){
-        ArrayList<String> guesses = new ArrayList<String>();
-        //TODO make suggestion
-        return guesses;
+        ArrayList<String> empty = new ArrayList<String>();
+        GuessDialog dialog = new GuessDialog((JFrame) SwingUtilities.getWindowAncestor(board), board);
+        dialog.setVisible(true);
+        return empty;
     }
     
 }
