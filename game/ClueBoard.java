@@ -233,7 +233,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         endTurn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.AIPlayersTakeTurns();
+                game.endPlayerTurn();
             }
         });
         dicePanel.add(endTurn);
@@ -245,11 +245,8 @@ public class ClueBoard extends JPanel implements GameObserver {
         cardPanel.setPreferredSize(new Dimension(200, 300));
         contentPane.add(cardPanel, BorderLayout.WEST);
 
-        CardDeck cards = CardDeck.getInstance();
-        cards.shuffleCards();
-        userPlayer.cards = new ArrayList<>(cards.cardNames.subList(0, 6));
         for(String card : userPlayer.cards) {
-            ImageIcon cardIcon1 = new ImageIcon(new ImageIcon(cards.getCardImage(card)).getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
+            ImageIcon cardIcon1 = new ImageIcon(new ImageIcon(CardDeck.getCardImage(card)).getImage().getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH));
             JLabel cardLabel1 = new JLabel(cardIcon1);
             cardPanel.add(cardLabel1);
         }
@@ -265,7 +262,7 @@ public class ClueBoard extends JPanel implements GameObserver {
     }
 
     public void makeGuess() {
-        GuessDialog dialog = new GuessDialog((JFrame) SwingUtilities.getWindowAncestor(this));
+        GuessDialog dialog = new GuessDialog((JFrame) SwingUtilities.getWindowAncestor(this), this);
         dialog.setVisible(true);
     }
 
@@ -357,8 +354,6 @@ public class ClueBoard extends JPanel implements GameObserver {
                     deleteButtons(panels, buttons);
                     moveUserToken(userPlayer.getPos());
                     endTurn.setEnabled(true);
-                    System.out.println("Player moved");
-
                 }
             });
         }
@@ -424,8 +419,11 @@ public class ClueBoard extends JPanel implements GameObserver {
         playerPanel.repaint();
 
         playerPanels.set(ind, playerPanel);
+    }
 
-
+    public void userMakeGuess(ArrayList<String> guesses){
+        System.out.println("They guessed: " + guesses.get(0) + ", " + guesses.get(1) + ", " + guesses.get(2));
+        game.playersProveWrong(guesses, userPlayer);
     }
 
 }

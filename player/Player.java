@@ -129,7 +129,9 @@ public abstract class Player {
 
     public abstract void move(int spaces);
     public abstract ArrayList<String> makeSuggestion();
+    //public abstract void makeSuggestion(String person, String weapon, String room);
     public abstract String proveWrong(ArrayList<String> guesses);
     public abstract void pickMove(ArrayList<int[]> moves, ClueBoard board);
+    //public abstract void makeAccusation()
     
 }

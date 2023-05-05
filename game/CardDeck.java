@@ -135,7 +135,7 @@ public class CardDeck {
     }
 
     /* Get card image to display player cards */
-    public String getCardImage(String card) {
+    public static String getCardImage(String card) {
         String image = "";
 
         switch (card) {

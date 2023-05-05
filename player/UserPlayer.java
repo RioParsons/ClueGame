@@ -38,7 +38,8 @@ public class UserPlayer extends Player {
 
     }
 
-    public void makeSuggestion(ArrayList<Player> players){
+    public void makeSuggestion(String person, String weapon, String room){
+        
         //TODO make suggestion
     }
 

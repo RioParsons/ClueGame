@@ -46,7 +46,7 @@ public class ClueGame {
         addRooms();
         addPlayers(UserPlayer);
         this.finalEnvelope = Envelope.getInstance(cards);
-        dealCards();
+        dealOutCards();
         addBoard();
     }
 
@@ -109,7 +109,7 @@ public class ClueGame {
         }
     }
 
-    public void dealCards(){
+    public void dealOutCards(){
         cards.dealCards(players);
 
         //Remove cards dealt from player's guesssheet
@@ -117,7 +117,9 @@ public class ClueGame {
         for (Player player : players){
             cards = player.getCards();
             for (int i = 0; i < cards.size(); i++){
-                player.getSheet().removeItem(cards.get(i));
+                if (player.getType().equals("User")){
+                    player.getSheet().removeItem(cards.get(i));
+                }   
             }
         }
     }
@@ -132,7 +134,7 @@ public class ClueGame {
     public void userTurn(){
         Player p = players.get(0);
         board.renderUserTurn(p);
-        System.out.println("User turn");
+        System.out.println("User takes their turn");
     }
 
     public void AIPlayersTakeTurns(){
@@ -141,13 +143,14 @@ public class ClueGame {
             if (Winner != null){
                 break;
             }
+            System.out.println("AI Player "+ players.get(i).getName()+ " takes their turn");
             AITurn(players.get(i));
-            //board.movePlayerToken(i);
         }
 
         if (Winner == null){
             userTurn();
         }
+
         board.rollDice.setEnabled(true);
     }
 
@@ -157,27 +160,38 @@ public class ClueGame {
         p.pickMove(moves, board);
         board.movePlayerToken(p);
         ArrayList<String> guesses = p.makeSuggestion();
-        System.out.println(p.getName()); //Temporary, testing
-        System.out.println(guesses);
-        playersProveWrong(guesses, p);
-        
 
+        System.out.println("They guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
+        playersProveWrong(guesses, p);
     }
 
     public void playersProveWrong(ArrayList<String> guesses, Player p){
+        // Make copy of Players without the player making a guess
+        ArrayList<Player> playersProve = new ArrayList<Player>();
+        for (Player player : players){
+            if ((player.getName().equals(p.getName())) == false){
+                playersProve.add(player);
+            }
+        }
+
         // Have other players prove wrong
         String proof = null;
         int i = 0; 
-        while(proof == null && i < players.size()){
-            proof = players.get(i).proveWrong(guesses);
+        while(proof == null && i < playersProve.size()){
+            proof = playersProve.get(i).proveWrong(guesses);
             i++;
         }
 
         // If no players could prove suggestion wrong, make accusation.
         if (proof == null){
+            if (p.getType().equals("AI")){
+               //p.makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
+
+            }
             makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
         } else {
             p.getSheet().removeItem(proof);
+            System.out.println("removing item: " + proof);
         }   
     }
 
@@ -200,6 +214,10 @@ public class ClueGame {
         int secondDie = n.nextInt(6) + 1;
         int roll = firstDie + secondDie;
         return roll;
+    }
+
+    public void endPlayerTurn(){
+        AIPlayersTakeTurns();
     }
         
 }
