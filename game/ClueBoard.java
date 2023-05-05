@@ -39,6 +39,7 @@ public class ClueBoard extends JPanel implements GameObserver {
     ArrayList<JPanel> playerPanels;
 
     private JPanel[][] tiles;
+    private JButton clueSheet;
 
     public ClueBoard(ArrayList<Player> players, ClueGame game) {
         this.game = game;
@@ -281,6 +282,23 @@ public class ClueBoard extends JPanel implements GameObserver {
             }
         });
         dicePanel.add(endTurn);
+
+        this.clueSheet = new JButton("Clue Sheet");
+        clueSheet.setSize(150, 70);
+        clueSheet.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Clue Sheet");
+                frame.setSize(800, 400);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                ClueSheet clueSheet = new ClueSheet();
+                frame.getContentPane().add(clueSheet);
+                frame.pack();
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
+            }
+        });
+        dicePanel.add(clueSheet);
 
         contentPane.add(dicePanel, BorderLayout.SOUTH);
     }

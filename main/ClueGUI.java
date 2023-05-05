@@ -70,7 +70,7 @@ public class ClueGUI extends JFrame {
         int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter the number of players (3-6):"));
 
         // Dialog box to select a character for each player
-        String[] characters = {"Miss Scarlet", "Professor Plum", "Reverend Green", "Colonel Mustard", "Mrs. Peacock", "Dr. Orchid" };
+        String[] characters = {"Miss Scarlett", "Professor Plum", "Reverend Green", "Colonel Mustard", "Mrs Peacock", "Dr Orchid" };
         String[] options = {"OK", "Cancel"};
         ImageIcon[] icons = {
                 new ImageIcon(new ImageIcon("resources/scarlet.png").getImage().getScaledInstance(150,350,java.awt.Image.SCALE_SMOOTH )),
