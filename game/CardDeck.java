@@ -31,10 +31,10 @@ public class CardDeck {
         this.suspects = new ArrayList<String>();
         suspects.add("Miss Scarlett");
         suspects.add("Professor Plum");
-        suspects.add("Mrs Peacock");
+        suspects.add("Mrs. Peacock");
         suspects.add("Reverend Green");
         suspects.add("Colonel Mustard");
-        suspects.add("Dr Orchid");  
+        suspects.add("Dr. Orchid");  
     }
 
     public void addWeapons(){
@@ -215,11 +215,11 @@ public class CardDeck {
                 image = "resources/mustard_card.jpg";
                 break;
 
-            case "Mrs Peacock":
+            case "Mrs. Peacock":
                 image = "resources/peacock_card.jpg";
                 break;
 
-            case "Dr Orchid":
+            case "Dr. Orchid":
                 image = "resources/orchid_card.jpg";
                 break;
         }

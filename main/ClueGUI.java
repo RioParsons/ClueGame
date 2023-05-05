@@ -65,13 +65,13 @@ public class ClueGUI extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            new ClueGUI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // public static void main(String[] args) {
+    //     try {
+    //         new ClueGUI();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     public void showSetupDialog() {
         // Dialog box to get the number of players

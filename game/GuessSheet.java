@@ -40,10 +40,10 @@ public class GuessSheet {
         this.suspects = new ArrayList<String>();
         suspects.add("Miss Scarlett");
         suspects.add("Professor Plum");
-        suspects.add("Mrs Peacock");
+        suspects.add("Mrs. Peacock");
         suspects.add("Reverend Green");
         suspects.add("Colonel Mustard");
-        suspects.add("Dr Orchid");  
+        suspects.add("Dr. Orchid");  
     }
 
     public void removeItem(String name){

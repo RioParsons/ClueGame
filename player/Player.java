@@ -110,13 +110,13 @@ public abstract class Player {
             this.position = new int[]{21, 13};
         } else if (this.name.equals("Professor Plum")){
             this.position=new int[]{10, 0};
-        } else if (this.name.equals("Mrs Peacock")){
+        } else if (this.name.equals("Mrs. Peacock")){
             this.position=new int[]{0, 12};
         } else if (this.name.equals("Reverend Green")){
             this.position=new int[]{0, 7};
         } else if (this.name.equals("Colonel Mustard")){
             this.position=new int[]{13, 19};
-        } else if (this.name.equals("Dr Orchid")){
+        } else if (this.name.equals("Dr. Orchid")){
             this.position=new int[]{21, 7};
         } else {
             this.position = new int[]{-1, -1};

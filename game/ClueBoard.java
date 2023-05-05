@@ -85,6 +85,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         playerPanels = new ArrayList<JPanel>();
         for (Player player : players) {
             int[] pos = player.getPos();
+            System.out.println(player.getName() + ": " + pos[0]+ ", " + pos[1]);
             JPanel panel = tiles[pos[0]][pos[1]];
             
             ImageIcon playerIcon = new ImageIcon(new ImageIcon(player.getImage())
