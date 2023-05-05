@@ -46,13 +46,15 @@ public class ClueBoard extends JPanel implements GameObserver {
         this.userPlayer = players.get(0);
         userPlayer.registerObserver(this);
 
-        //currentPlayerPos = new int[]{21, 6};
-        //currentPlayer2Pos = new int[]{5, 19};
-        //currentPlayer3Pos = new int[]{13, 19};
         setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
         setBackground(BACKGROUND_COLOR);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
 
+        addTiles();
+        addPlayerPanels();
+    }
+
+    public void addTiles(){
         tiles = new JPanel[NUM_ROWS][NUM_COLS];
         for (int row = 0; row < NUM_ROWS; row++) {
             for (int col = 0; col < NUM_COLS; col++) {
@@ -64,11 +66,14 @@ public class ClueBoard extends JPanel implements GameObserver {
                 if (isRoomTile(row, col)) {
                     tile.setBackground(ROOM_COLOR);
                     // Add label for room
-                    JLabel label = new JLabel(getRoomName(row, col));
-                    label.setForeground(Color.WHITE);
-                    label.setFont(new Font("SansSerif", Font.PLAIN, 12));
-                    label.setHorizontalAlignment(JLabel.CENTER);
-                    tile.add(label);
+                    if (isRoomTitle(row, col)){
+                        JLabel label = new JLabel(getRoomName(row, col));
+                        label.setForeground(Color.WHITE);
+                        label.setFont(new Font("SansSerif", Font.PLAIN, 12));
+                        label.setHorizontalAlignment(JLabel.CENTER);
+                        tile.add(label);
+                    }
+                    
                 } else {
                     tile.setBackground(HALLWAY_COLOR);
                 }
@@ -77,15 +82,12 @@ public class ClueBoard extends JPanel implements GameObserver {
                 tiles[row][col] = tile;
             }
         }
-
-        addPlayerPanels();
     }
 
     public void addPlayerPanels(){
         playerPanels = new ArrayList<JPanel>();
         for (Player player : players) {
             int[] pos = player.getPos();
-            System.out.println(player.getName() + ": " + pos[0]+ ", " + pos[1]);
             JPanel panel = tiles[pos[0]][pos[1]];
             
             ImageIcon playerIcon = new ImageIcon(new ImageIcon(player.getImage())
@@ -96,8 +98,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         }
     }
 
-
-    private boolean isRoomTile(int row, int col) {
+    public boolean isRoomTile(int row, int col) {
         if((col==6 || col==7 || col==12 || col==13))
             return false;
         if(row==4 && col!=8 && col!=9 && col!=10 && col!=11 && col<13)
@@ -124,27 +125,54 @@ public class ClueBoard extends JPanel implements GameObserver {
         return true;
     }
 
-    private String getRoomName(int row, int col) {
+    public boolean isRoomTitle(int row, int col) {
         // Names of the rooms based on their positions
         if (row == 2 && col == 3) {
-            return "Study";
+            return true;
         } else if (row == 8 && col == 3) {
-            return "Library";
+            return true;
         } else if (row == 13 && col == 3) {
-            return "Billiard";
+            return true;
         } else if (row == 21 && col == 3) {
-            return "Conserv";
+            return true;
         } else if (row == 2 && col == 10) {
-            return "Hall";
+            return true;
         } else if (row == 16 && col == 10) {
-            return "Ball";
+            return true;
         } else if (row == 3 && col == 18) {
-            return "Lounge";
+            return true;
         } else if (row == 10 && col == 18) {
-            return "Dining";
+            return true;
         } else if (row == 18 && col == 18) {
-            return "Kitchen";
+            return true;
         } else if (row == 10 && col == 9) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String getRoomName(int row, int col) {
+        // Names of the rooms based on their positions
+        if (row < 4 && col < 6) {
+            return "Study";
+        } else if (row < 10 && row > 5 && col < 6) {
+            return "Library";
+        } else if (row > 11 && row < 16 && col < 6) {
+            return "Billiard";
+        } else if (row > 17 && col < 6) {
+            return "Conserv";
+        } else if (row < 6 && col < 12 && col > 7) {
+            return "Hall";
+        } else if (row > 14 && col < 12 && col > 7) {
+            return "Ball";
+        } else if (row < 5 && col > 13) {
+            return "Lounge";
+        } else if (row > 6 && row < 13 && col > 13) {
+            return "Dining";
+        } else if (row > 14 && col > 13) {
+            return "Kitchen";
+        } else if (row < 13 && row > 7 && col < 12 && col > 7) {
             return "Clue";
         } else {
             return null;
@@ -156,7 +184,11 @@ public class ClueBoard extends JPanel implements GameObserver {
     }
 
     public void initializeBoard() {
-        
+
+        addBoardToPlayers();
+
+        //Board is rendered ready for user to take their turn
+
         JFrame frame = new JFrame("Clue Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize((TILE_SIZE * NUM_COLS + 2) + 500, TILE_SIZE * NUM_ROWS + 2);
@@ -165,7 +197,17 @@ public class ClueBoard extends JPanel implements GameObserver {
         // JPanel to hold both the ClueBoard and the player image
         this.contentPane = new JPanel(new BorderLayout());
         contentPane.add(this, BorderLayout.CENTER);
-        
+
+        addButtonPanel();
+        addDicePanel();
+        addCardPanel();
+
+        frame.setLocationRelativeTo(null);
+        frame.setContentPane(contentPane);
+        frame.setVisible(true);
+    }
+
+    public void addButtonPanel(){
         // JPanel to hold the buttons for making accusations and guesses
         this.buttonPanel = new JPanel(new GridLayout(2, 1));
         buttonPanel.setPreferredSize(new Dimension(100, 100));
@@ -187,13 +229,16 @@ public class ClueBoard extends JPanel implements GameObserver {
         guessButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                guessButton.setEnabled(false);
                 makeGuess();
             }
         });
         buttonPanel.add(guessButton);
 
         contentPane.add(buttonPanel, BorderLayout.NORTH);
+    }
 
+    public void addDicePanel(){
         this.dicePanel = new JPanel();
         dicePanel.setPreferredSize(new Dimension(200, 100));
         ImageIcon diceIcon1 = new ImageIcon(new ImageIcon("resources/Dice_3.png").getImage().getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH ));
@@ -220,27 +265,27 @@ public class ClueBoard extends JPanel implements GameObserver {
 
                 rollDice.setEnabled(false); //So that user can only roll dice once
 
-                userMove(dice1 + dice2);
-
-                //movePlayerToken(dice1+dice2);
+                userPlayer.move(dice1 + dice2);
             }
         });
 
         dicePanel.add(rollDice);
         this.endTurn = new JButton("End Turn");
         endTurn.setSize(150, 70);
-        endTurn.setEnabled(false);
         dicePanel.add(endTurn);
         endTurn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                endTurn.setEnabled(false);
                 game.endPlayerTurn();
             }
         });
         dicePanel.add(endTurn);
 
         contentPane.add(dicePanel, BorderLayout.SOUTH);
+    }
 
+    public void addCardPanel(){
         //JPanel to hold the card icons
         JPanel cardPanel = new JPanel(new GridLayout(3, 2));
         cardPanel.setPreferredSize(new Dimension(200, 300));
@@ -251,10 +296,6 @@ public class ClueBoard extends JPanel implements GameObserver {
             JLabel cardLabel1 = new JLabel(cardIcon1);
             cardPanel.add(cardLabel1);
         }
-
-        frame.setLocationRelativeTo(null);
-        frame.setContentPane(contentPane);
-        frame.setVisible(true);
     }
 
     @Override
@@ -272,15 +313,10 @@ public class ClueBoard extends JPanel implements GameObserver {
         dialog.setVisible(true);
     }
 
-    public void renderUserTurn(Player p){
-        dicePanel.setEnabled(true);
-        buttonPanel.setEnabled(true);
-    }
-
-    public void userMove(int roll){
-        ArrayList<int[]> possibleMoves = generatePossibleMoves(userPlayer.getPos(), roll);
-        players.get(0).pickMove(possibleMoves, this);
-        //showPossibleMoves(possibleMoves);
+    public void renderUserTurn(){
+        guessButton.setEnabled(true);
+        rollDice.setEnabled(true);
+        endTurn.setEnabled(true);
     }
 
     public ArrayList<int[]> generatePossibleMoves(int[] pos, int roll){
@@ -315,9 +351,7 @@ public class ClueBoard extends JPanel implements GameObserver {
                 possibleMoves.add(i);
             }
         }
-
         return possibleMoves;
-
     }
 
     public void showPossibleMoves(ArrayList<int[]> possibleMoves){
@@ -353,8 +387,11 @@ public class ClueBoard extends JPanel implements GameObserver {
                     userPlayer.setPosition(pos);
 
                     deleteButtons(panels, buttons);
-                    moveUserToken(userPlayer.getPos());
-                    endTurn.setEnabled(true);
+                    movePlayerToken(userPlayer);
+
+                    if((isRoomTile(pos[0], pos[1])) != true){
+                        guessButton.setEnabled(false);
+                    } 
                 }
             });
         }
@@ -366,29 +403,6 @@ public class ClueBoard extends JPanel implements GameObserver {
             panels.get(j).revalidate();
             panels.get(j).repaint();
         }
-    }
-
-    public void moveUserToken(int[] pos){
-        // Remove the old player token
-        JPanel playerPanel = playerPanels.get(0);
-        Component[] components = playerPanel.getComponents();
-        for (Component c : components) {
-            playerPanel.remove(c);
-        }
-        playerPanel.revalidate();
-        playerPanel.repaint();
-        playerPanel = tiles[pos[0]][pos[1]];
-
-        ImageIcon playerIcon = new ImageIcon(new ImageIcon(userPlayer.getImage())
-            .getImage().getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH));
-        playerPanel = tiles[pos[0]][pos[1]];
-        playerPanel.add(new JLabel(playerIcon));
-        playerPanel.revalidate();
-        playerPanel.repaint();
-
-        playerPanels.set(0, playerPanel);
-
-
     }
 
     public void movePlayerToken(Player p){
@@ -425,6 +439,12 @@ public class ClueBoard extends JPanel implements GameObserver {
     public void userMakeGuess(ArrayList<String> guesses){
         System.out.println("They guessed: " + guesses.get(0) + ", " + guesses.get(1) + ", " + guesses.get(2));
         game.playersProveWrong(guesses, userPlayer);
+    }
+
+    public void addBoardToPlayers(){
+        for (Player p : players){
+            p.setBoard(this);
+        }
     }
 
 }

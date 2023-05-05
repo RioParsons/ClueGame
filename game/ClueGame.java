@@ -20,23 +20,13 @@ public class ClueGame {
     Envelope finalEnvelope;
     Player Winner;
     ClueBoard board;
+    UserPlayer user;
     int numPlayers;
-    boolean userTurn;
-    CountDownLatch latch;
 
     // There are separate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
-    public void playGame(int numPlayers, String userPlayer){
+    public void startGame(int numPlayers, String userPlayer){
         this.numPlayers = numPlayers;
         setupGame(userPlayer);
-        int i = 1; //Temporary, until the game can decide a winner
-        System.out.println("\n -------Making guesses------");
-            //System.out.println("Turn " + i ); //Temorary, testing
-            userTurn();
-            // i++;
-            // if (i > 50){
-            //     break;
-            // }
-        
     }
 
     public void setupGame(String UserPlayer){
@@ -127,15 +117,11 @@ public class ClueGame {
     public void addBoard(){
         this.board = new ClueBoard(players, this);
         board.initializeBoard();
+        System.out.println("\n ---Game starts---\n");
     }
+
 
     //Play Game functions
-
-    public void userTurn(){
-        Player p = players.get(0);
-        board.renderUserTurn(p);
-        System.out.println("User takes their turn");
-    }
 
     public void AIPlayersTakeTurns(){
         //Starting at second player because first player is always the user
@@ -143,22 +129,18 @@ public class ClueGame {
             if (Winner != null){
                 break;
             }
-            System.out.println("AI Player "+ players.get(i).getName()+ " takes their turn");
+            System.out.println(players.get(i).getName()+ " takes their turn");
             AITurn(players.get(i));
         }
 
         if (Winner == null){
-            userTurn();
+            userTakesTurn();
         }
-
-        board.rollDice.setEnabled(true);
     }
 
     public void AITurn(Player p){
 
-        ArrayList<int[]> moves = board.generatePossibleMoves(p.getPos(), rollDice());
-        p.pickMove(moves, board);
-        board.movePlayerToken(p);
+        p.move(rollDice());
         ArrayList<String> guesses = p.makeSuggestion();
 
         System.out.println("They guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
@@ -191,8 +173,12 @@ public class ClueGame {
             makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
         } else {
             p.getSheet().removeItem(proof);
-            System.out.println("removing item: " + proof);
         }   
+    }
+
+    public void userTakesTurn(){
+        board.renderUserTurn();
+        System.out.println("User takes their turn");
     }
 
     public void makeAccusation(String Murderer, String Weapon, String Room, Player player){
@@ -207,7 +193,6 @@ public class ClueGame {
         }
     }
 
-
     public int rollDice(){
         Random n = new Random();
         int firstDie = n.nextInt(6)+ 1;
@@ -219,5 +204,6 @@ public class ClueGame {
     public void endPlayerTurn(){
         AIPlayersTakeTurns();
     }
-        
+
+    // Getters and Setters
 }

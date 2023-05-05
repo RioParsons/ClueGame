@@ -65,14 +65,6 @@ public class ClueGUI extends JFrame {
         }
     }
 
-    // public static void main(String[] args) {
-    //     try {
-    //         new ClueGUI();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
     public void showSetupDialog() {
         // Dialog box to get the number of players
         int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter the number of players (3-6):"));
@@ -111,9 +103,6 @@ public class ClueGUI extends JFrame {
         this.setVisible(false);
 
         ClueGame game = new ClueGame();
-        game.playGame(numPlayers, userPlayer);
-
-        
-
+        game.startGame(numPlayers, userPlayer);
     }
 }

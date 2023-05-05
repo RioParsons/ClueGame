@@ -14,6 +14,7 @@ public abstract class Player {
     GuessSheet guessSheet;
     boolean madeAccusation;
     int[] position;
+    ClueBoard board;
     private ArrayList<GameObserver> observers = new ArrayList<>();
 
     public Player(String Name){
@@ -57,16 +58,25 @@ public abstract class Player {
                 image = "resources/mustard.png";
                 break;
 
-            case "Mrs Peacock":
+            case "Mrs. Peacock":
                 image = "resources/peacock.png";
                 break;
 
-            case "Dr Orchid":
+            case "Dr. Orchid":
                 image = "resources/orchid.png";
                 break;
+            default:
+                System.out.println("Could not find image for " + this.getName());
         }
 
         return image;
+    }
+
+    public void move(int roll){
+        ArrayList<int[]> moves = board.generatePossibleMoves(this.position, roll);
+        pickMove(moves);
+        notifyObservers(" moved " + roll + " spaces.");
+        board.movePlayerToken(this);
     }
 
     public void giveCard(String card){
@@ -93,17 +103,21 @@ public abstract class Player {
         return this.position;
     }
 
+    public void setBoard(ClueBoard board){
+        this.board = board;
+    }
+
     public void madeFalseAccusation(){
         madeAccusation=true;
     }
 
-    public int rollDice(){
-        Random n = new Random();
-        int firstDie = n.nextInt(6)+ 1;
-        int secondDie = n.nextInt(6) + 1;
-        int roll = firstDie + secondDie;
-        return roll;
-    }
+    // public int rollDice(){
+    //     Random n = new Random();
+    //     int firstDie = n.nextInt(6)+ 1;
+    //     int secondDie = n.nextInt(6) + 1;
+    //     int roll = firstDie + secondDie;
+    //     return roll;
+    // }
 
     public void getStartPos(){
         if (this.name.equals("Miss Scarlett")){
@@ -127,11 +141,11 @@ public abstract class Player {
         this.position=pos;
     }
 
-    public abstract void move(int spaces);
+    //public abstract void move(int spaces);
     public abstract ArrayList<String> makeSuggestion();
     //public abstract void makeSuggestion(String person, String weapon, String room);
     public abstract String proveWrong(ArrayList<String> guesses);
-    public abstract void pickMove(ArrayList<int[]> moves, ClueBoard board);
+    public abstract void pickMove(ArrayList<int[]> moves);
     //public abstract void makeAccusation()
     
 }

@@ -25,22 +25,8 @@ public class UserPlayer extends Player {
         return name;
     }
 
-    public void pickMove(ArrayList<int[]> moves, ClueBoard board){
+    public void pickMove(ArrayList<int[]> moves){
         board.showPossibleMoves(moves);
-    }
-
-    
-
-    public void move(int spaces){
-
-        notifyObservers(name + " moved " + spaces + " spaces.");
-
-
-    }
-
-    public void makeSuggestion(String person, String weapon, String room){
-        
-        //TODO make suggestion
     }
 
     public String proveWrong(ArrayList<String> guesses){

@@ -25,20 +25,10 @@ public class AIPlayer extends Player {
         return name;
     }
     
-    public void pickMove(ArrayList<int[]> moves, ClueBoard board){
+    public void pickMove(ArrayList<int[]> moves){
         Random n = new Random();
         int ind = n.nextInt(moves.size());
         position = moves.get(ind);
-    }
-
-    public void move(int spaces){
-        notifyObservers(this.getName() + " moved " + spaces + " spaces.");
-        if (madeAccusation == false){
-            int n = rollDice();
-            //TODO move
-
-        }
-        
     }
 
     public ArrayList<String> makeSuggestion(){

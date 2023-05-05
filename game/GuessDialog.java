@@ -20,10 +20,15 @@ public class GuessDialog extends JDialog {
         this.board = board;
 
         Player player = board.userPlayer;
+        String Room = getPlayerRoom(player);
+        if (Room == null){
+            dispose();
+            System.out.println("User was not in a room so they could not make a guess");
+        }
 
         String[] suspects = player.getSheet().getSuspects().toArray(new String[0]);
         String[] weapons = player.getSheet().getWeapons().toArray(new String[0]);
-        String[] rooms = player.getSheet().getRooms().toArray(new String[0]);
+        String[] rooms = {Room};
 
         // Initialize components
         personCombo = new JComboBox<>(suspects);
@@ -77,6 +82,20 @@ public class GuessDialog extends JDialog {
 
     public String getRoom() {
         return (String) roomCombo.getSelectedItem();
+    }
+
+    public String getPlayerRoom(Player player){
+        String room;
+        int[] pos = player.getPos();
+
+        if((board.isRoomTile(pos[0], pos[1])) == true){
+            room = board.getRoomName(pos[0], pos[1]);
+        } else {
+            room = null;
+        }
+
+        return room;
+
     }
 
 }
