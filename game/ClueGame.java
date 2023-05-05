@@ -2,11 +2,15 @@ package game;
 
 import game.CardDeck;
 import game.Weapon;
+import main.ClueGUI;
 import player.AIPlayer;
 import player.Player;
+import player.UserPlayer;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 public class ClueGame {
     CardDeck cards;
     ArrayList<Player> players;
@@ -15,32 +19,28 @@ public class ClueGame {
     ArrayList<Weapon> weapons;
     Envelope finalEnvelope;
     Player Winner;
+    ClueBoard board;
+    UserPlayer user;
+    int numPlayers;
 
     // There are separate players and suspects lists because all of the characters, even those not used by a player, can be a murderer.
-    public void playGame(){
-        setupGame();
-        int i = 1; //Temporary, until the game can decide a winner
-        System.out.println("\n -------Making guesses------");
-        while (Winner == null){
-            System.out.println("Turn " + i ); //Temorary, testing
-            playersTakeTurns();
-            i++;
-            if (i > 50){
-                break;
-            }
-        }
+    public void startGame(int numPlayers, String userPlayer){
+        this.numPlayers = numPlayers;
+        setupGame(userPlayer);
     }
 
-    public void setupGame(){
+    public void setupGame(String UserPlayer){
         this.cards = CardDeck.getInstance();
         addSuspects();
         addWeapons();
         addRooms();
-        addPlayers();
+        addPlayers(UserPlayer);
         this.finalEnvelope = Envelope.getInstance(cards);
-        dealCards();
+        dealOutCards();
+        addBoard();
     }
 
+    // Setup Functions
     public void addSuspects(){
         this.suspects = cards.getSuspects();
     }
@@ -81,17 +81,25 @@ public class ClueGame {
         }
     }
 
-    public void addPlayers(){
-        //TODO add players
-        players = new ArrayList<Player>();
-        players.add(new AIPlayer("Test1"));
-        players.add(new AIPlayer("Test 2"));
-        players.add(new AIPlayer("Test 3"));
-        players.add(new AIPlayer("Test 4"));
-
+    public void addPlayers(String userPlayer){
+        this.players = new ArrayList<Player>();
+        players.add(new UserPlayer(userPlayer));
+        addAIPlayers(userPlayer);
     }
 
-    public void dealCards(){
+    public void addAIPlayers(String userName){
+        ArrayList<String> possiblePlayers = new ArrayList<String>(suspects);
+        possiblePlayers.remove(userName);
+        while (players.size() < this.numPlayers){
+            Random n = new Random();
+            int characterInd = n.nextInt(possiblePlayers.size());
+            String name = possiblePlayers.get(characterInd);
+            players.add(new AIPlayer(name));
+            possiblePlayers.remove(characterInd);
+        }
+    }
+
+    public void dealOutCards(){
         cards.dealCards(players);
 
         //Remove cards dealt from player's guesssheet
@@ -99,39 +107,81 @@ public class ClueGame {
         for (Player player : players){
             cards = player.getCards();
             for (int i = 0; i < cards.size(); i++){
-                player.getSheet().removeItem(cards.get(i));
+                if (player.getType().equals("User")){
+                    player.getSheet().removeItem(cards.get(i));
+                }   
             }
         }
     }
 
-    public void playersTakeTurns(){
-        for(Player p: players){
+    public void addBoard(){
+        this.board = new ClueBoard(players, this);
+        board.initializeBoard();
+        System.out.println("\n ---Game starts---\n");
+    }
+
+
+    //Play Game functions
+
+    public void AIPlayersTakeTurns(){
+        //Starting at second player because first player is always the user
+        for (int i=1; i < players.size(); i++){
             if (Winner != null){
                 break;
             }
-            p.move(0);
-            ArrayList<String> guesses = p.makeSuggestion();
-            System.out.println(p.getName()); //Temporary, testing
-            System.out.println(guesses);
+            System.out.println(players.get(i).getName()+ " takes their turn");
+            AITurn(players.get(i));
+        }
+
+        if (Winner == null){
+            userTakesTurn();
+        }
+    }
+
+    public void AITurn(Player p){
+
+        p.move(rollDice());
+        ArrayList<String> guesses = p.makeSuggestion();
+        if (guesses.get(0) == null){
+            System.out.println("They were not in a room so they did not make a guess");
+        } else {
+            System.out.println("They guessed: "+ guesses.get(0) + ", " + guesses.get(1) +", "+ guesses.get(2));
             playersProveWrong(guesses, p);
         }
     }
 
     public void playersProveWrong(ArrayList<String> guesses, Player p){
+        // Make copy of Players without the player making a guess
+        ArrayList<Player> playersProve = new ArrayList<Player>();
+        for (Player player : players){
+            if ((player.getName().equals(p.getName())) == false){
+                playersProve.add(player);
+            }
+        }
+
         // Have other players prove wrong
         String proof = null;
         int i = 0; 
-        while(proof == null && i < players.size()){
-            proof = players.get(i).proveWrong(guesses);
+        while(proof == null && i < playersProve.size()){
+            proof = playersProve.get(i).proveWrong(guesses);
             i++;
         }
 
         // If no players could prove suggestion wrong, make accusation.
         if (proof == null){
+            if (p.getType().equals("AI")){
+               //p.makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
+
+            }
             makeAccusation(guesses.get(0), guesses.get(1), guesses.get(2), p);
         } else {
             p.getSheet().removeItem(proof);
         }   
+    }
+
+    public void userTakesTurn(){
+        board.renderUserTurn();
+        System.out.println("User takes their turn");
     }
 
     public void makeAccusation(String Murderer, String Weapon, String Room, Player player){
@@ -144,7 +194,19 @@ public class ClueGame {
         } else {
             player.madeFalseAccusation();   
         }
-
-
     }
+
+    public int rollDice(){
+        Random n = new Random();
+        int firstDie = n.nextInt(6)+ 1;
+        int secondDie = n.nextInt(6) + 1;
+        int roll = firstDie + secondDie;
+        return roll;
+    }
+
+    public void endPlayerTurn(){
+        AIPlayersTakeTurns();
+    }
+
+    // Getters and Setters
 }

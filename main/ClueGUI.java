@@ -4,6 +4,7 @@ import command.Command;
 import command.ShowSetupDialogCommand;
 import command.StartGameCommand;
 import game.ClueBoard;
+import game.ClueGame;
 import player.UserPlayer;
 
 import javax.imageio.ImageIO;
@@ -19,8 +20,6 @@ public class ClueGUI extends JFrame {
     public static final Image LOGO = loadImage("CLUE_logo.png");
     private static final String IMAGE_PATH = "resources/";
     private Command currentCommand;
-
-    private UserPlayer userPlayer;
 
     public ClueGUI() {
         currentCommand = new StartGameCommand(this);
@@ -66,14 +65,6 @@ public class ClueGUI extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            new ClueGUI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void showSetupDialog() {
         // Dialog box to get the number of players
         int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter the number of players (3-6):"));
@@ -99,16 +90,19 @@ public class ClueGUI extends JFrame {
         }
         int result = JOptionPane.showOptionDialog(null, panel, "Select a character",
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        
+        String userPlayer = "";
 
         for (int i = 0; i < buttons.length; i++) {
             if (buttons[i].isSelected()) {
-                userPlayer = new UserPlayer(characters[i]);
+                userPlayer = characters[i];
                 break;
             }
         }
 
-        ClueBoard board = new ClueBoard(userPlayer);
-        board.initializeBoard();
         this.setVisible(false);
+
+        ClueGame game = new ClueGame();
+        game.startGame(numPlayers, userPlayer);
     }
 }

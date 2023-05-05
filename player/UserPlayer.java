@@ -3,6 +3,12 @@ package player;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+import game.ClueBoard;
+import game.GuessDialog;
+
 /* Strategy Pattern - UserPlayer */
 public class UserPlayer extends Player {
 
@@ -23,50 +29,8 @@ public class UserPlayer extends Player {
         return name;
     }
 
-    public String getImage() {
-        String image = "";
-
-        switch (this.getName()) {
-            case "Miss Scarlet":
-                image = "resources/scarlet.png";
-                break;
-
-            case "Professor Plum":
-                image = "resources/plum.png";
-                break;
-
-            case "Reverend Green":
-                image = "resources/green.png";
-                break;
-
-            case "Colonel Mustard":
-                image = "resources/mustard.png";
-                break;
-
-            case "Mrs. Peacock":
-                image = "resources/peacock.png";
-                break;
-
-            case "Dr. Orchid":
-                image = "resources/orchid.png";
-                break;
-        }
-
-        return image;
-    }
-
-    public void move(int spaces){
-
-        notifyObservers(name + " moved " + spaces + " spaces.");
-
-        if (madeAccusation == false){
-            int n = rollDice();
-            //TODO move
-        }
-    }
-
-    public void makeSuggestion(ArrayList<Player> players){
-        //TODO make suggestion
+    public void pickMove(ArrayList<int[]> moves){
+        board.showPossibleMoves(moves);
     }
 
     public String proveWrong(ArrayList<String> guesses){
@@ -76,9 +40,10 @@ public class UserPlayer extends Player {
     }
 
     public ArrayList<String> makeSuggestion(){
-        ArrayList<String> guesses = new ArrayList<String>();
-        //TODO make suggestion
-        return guesses;
+        ArrayList<String> empty = new ArrayList<String>();
+        GuessDialog dialog = new GuessDialog((JFrame) SwingUtilities.getWindowAncestor(board), board);
+        dialog.setVisible(true);
+        return empty;
     }
     
 }

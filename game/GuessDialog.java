@@ -1,6 +1,10 @@
 package game;
 
+import java.util.ArrayList;
+
 import javax.swing.*;
+
+import player.Player;
 
 public class GuessDialog extends JDialog {
 
@@ -9,14 +13,27 @@ public class GuessDialog extends JDialog {
     private JComboBox<String> roomCombo;
     private JButton okButton;
     private JButton cancelButton;
+    private ClueBoard board;
 
-    public GuessDialog(JFrame parent) {
+    public GuessDialog(JFrame parent, ClueBoard board) {
         super(parent, "Make a Guess", true);
+        this.board = board;
+
+        Player player = board.userPlayer;
+        String Room = getPlayerRoom(player);
+        if (Room == null){
+            dispose();
+            System.out.println("User was not in a room so they could not make a guess");
+        }
+
+        String[] suspects = player.getSheet().getSuspects().toArray(new String[0]);
+        String[] weapons = player.getSheet().getWeapons().toArray(new String[0]);
+        String[] rooms = {Room};
 
         // Initialize components
-        personCombo = new JComboBox<>(new String[] {"Miss Scarlet", "Professor Plum", "Reverend Green", "Colonel Mustard", "Mrs. Peacock", "Dr. Orchid"});
-        weaponCombo = new JComboBox<>(new String[] {"Candlestick", "Knife", "Lead Pipe", "Revolver", "Rope", "Wrench"});
-        roomCombo = new JComboBox<>(new String[] {"Kitchen", "Library", "Study", "Dining Room", "Lounge", "Hall", "Billiard Room", "Conservatory", "Ballroom"});
+        personCombo = new JComboBox<>(suspects);
+        weaponCombo = new JComboBox<>(weapons);
+        roomCombo = new JComboBox<>(rooms);
         okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
 
@@ -41,8 +58,15 @@ public class GuessDialog extends JDialog {
         // Add action listeners to buttons
         okButton.addActionListener(e -> {
             // Handle OK button action
+            ArrayList<String> guesses = new ArrayList<String>();
+            guesses.add(getPerson());
+            guesses.add(getWeapon());
+            guesses.add(getRoom());
+            System.out.println("They guessed: " + guesses.get(0) + ", " + guesses.get(1) + ", " + guesses.get(2));
+            board.game.playersProveWrong(guesses, player);
             dispose();
         });
+
         cancelButton.addActionListener(e -> {
             // Handle cancel button action
             dispose();
@@ -59,6 +83,20 @@ public class GuessDialog extends JDialog {
 
     public String getRoom() {
         return (String) roomCombo.getSelectedItem();
+    }
+
+    public String getPlayerRoom(Player player){
+        String room;
+        int[] pos = player.getPos();
+
+        if((board.isRoomTile(pos[0], pos[1])) == true){
+            room = board.getRoomName(pos[0], pos[1]);
+        } else {
+            room = null;
+        }
+
+        return room;
+
     }
 
 }

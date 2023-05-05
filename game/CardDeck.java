@@ -31,10 +31,10 @@ public class CardDeck {
         this.suspects = new ArrayList<String>();
         suspects.add("Miss Scarlett");
         suspects.add("Professor Plum");
-        suspects.add("Mrs Peacock");
+        suspects.add("Mrs. Peacock");
         suspects.add("Reverend Green");
         suspects.add("Colonel Mustard");
-        suspects.add("Dr Orchid");  
+        suspects.add("Dr. Orchid");  
     }
 
     public void addWeapons(){
@@ -98,7 +98,7 @@ public class CardDeck {
         }
 
         //Testing
-        System.out.println("---player.Player's cards-----");
+        System.out.println("---Player's cards-----");
         for(Player player: players){
             System.out.println(player.getName()+"'s cards: ");
             System.out.println(player.getCards());
@@ -135,7 +135,7 @@ public class CardDeck {
     }
 
     /* Get card image to display player cards */
-    public String getCardImage(String card) {
+    public static String getCardImage(String card) {
         String image = "";
 
         switch (card) {
@@ -215,11 +215,11 @@ public class CardDeck {
                 image = "resources/mustard_card.jpg";
                 break;
 
-            case "Mrs Peacock":
+            case "Mrs. Peacock":
                 image = "resources/peacock_card.jpg";
                 break;
 
-            case "Dr Orchid":
+            case "Dr. Orchid":
                 image = "resources/orchid_card.jpg";
                 break;
         }
