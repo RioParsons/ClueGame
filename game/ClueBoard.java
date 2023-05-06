@@ -276,7 +276,6 @@ public class ClueBoard extends JPanel implements GameObserver {
         dicePanel.add(diceLabel2);
         this.rollDice = new JButton("Roll Dice");
         rollDice.setSize(150, 70);
-        // rollDice button
         rollDice.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -297,6 +296,8 @@ public class ClueBoard extends JPanel implements GameObserver {
         });
 
         dicePanel.add(rollDice);
+
+        //Add end turn button
         this.endTurn = new JButton("End Turn");
         endTurn.setSize(150, 70);
         dicePanel.add(endTurn);
@@ -309,6 +310,7 @@ public class ClueBoard extends JPanel implements GameObserver {
         });
         dicePanel.add(endTurn);
 
+        //Add Clue Sheet button
         this.clueSheet = new JButton("Clue Sheet");
         clueSheet.setSize(150, 70);
         clueSheet.addActionListener(new ActionListener() {

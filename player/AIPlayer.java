@@ -45,7 +45,6 @@ public class AIPlayer extends Player {
         } else {
             String suspect = findSuspect();
             String weapon = findWeapon();
-            //String room = findRoom(); //Temporary, until movement is added in 
 
             guesses.add(suspect);
             guesses.add(weapon);

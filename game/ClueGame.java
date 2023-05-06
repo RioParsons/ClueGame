@@ -89,8 +89,11 @@ public class ClueGame {
     }
 
     public void addAIPlayers(String userName){
+        //Remove user from list of potential players
         ArrayList<String> possiblePlayers = new ArrayList<String>(suspects);
         possiblePlayers.remove(userName);
+
+        //Randomly select AI player names
         while (players.size() < this.numPlayers){
             Random n = new Random();
             int characterInd = n.nextInt(possiblePlayers.size());
@@ -140,7 +143,6 @@ public class ClueGame {
     }
 
     public void AITurn(Player p){
-
         p.move(rollDice());
         ArrayList<String> guesses = p.makeSuggestion();
         if (guesses.get(0) == null){
@@ -192,18 +194,6 @@ public class ClueGame {
         System.out.println("User takes their turn");
     }
 
-    // public void makeAccusation(String Murderer, String Weapon, String Room, Player player){
-    //     boolean correct = finalEnvelope.checkAccusation(Murderer, Weapon, Room);
-    //     if (correct == true){
-    //         Winner = player;
-    //         System.out.println(player.getName() + " Won the game!");
-    //         System.out.println("They correctly guessed that "+ Murderer + " killed Mr. John Boddy with a " + Weapon + " in the " + Room );
-    //         //End Game
-    //     } else {
-    //         player.madeFalseAccusation();   
-    //     }
-    // }
-
     public int rollDice(){
         Random n = new Random();
         int firstDie = n.nextInt(6)+ 1;
@@ -216,5 +206,4 @@ public class ClueGame {
         AIPlayersTakeTurns();
     }
 
-    // Getters and Setters
 }
